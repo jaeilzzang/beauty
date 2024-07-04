@@ -1,0 +1,59 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(219 219 219 / 40%);
+
+  z-index: 99;
+}
+
+.open {
+  display: block;
+  max-width: 430px;
+  overflow: auto;
+  height: 100%;
+  background: $white;
+
+  animation: slideIn-left-right 0.5s;
+
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+// sidebar cancel
+
+.cancel {
+  display: flex;
+  justify-content: end;
+  cursor: pointer;
+}
+
+// sidebar menu list
+
+.section {
+  padding: 1rem 0 0.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+
+  margin: 1rem 0;
+}
+
+.chip_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  margin : {
+    top: 1rem;
+    left: 0.5rem;
+  }
+}
+
+.subMenu {
+  display: flex;
+}
