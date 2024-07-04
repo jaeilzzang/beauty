@@ -48,7 +48,7 @@ export default function Home() {
         <div className={styles.article_wrapper}>
           {Array.from({ length: 5 }, (v, i) => (
             <article key={i}>
-              <Link href={"#"}>
+              <Link href={"/hospital/1"}>
                 <div className={styles.thumbnail_box}>
                   <Image
                     fill
