@@ -8,14 +8,27 @@ import Portal from "@/components/template/modal";
 import { cosmetic, location, surgical } from "@/constants";
 import { Chip } from "@/components/atoms/chip";
 import Link from "next/link";
+import { createSidebarList } from "@/utils";
 
-type TMenuList = { title: string; href: string; list: string[] };
-type TSubMenuList = Omit<TMenuList, "list">;
+type TSubMenuList = { title: string; href: string };
+type TMenuList = {
+  title: string;
+  list: { title: string; href: string }[];
+};
 
 const menuList: TMenuList[] = [
-  { title: "Surgical Procedure", href: "#", list: surgical },
-  { title: "Cosmetic Procedure", href: "#", list: cosmetic },
-  { title: "Location", href: "#", list: location },
+  {
+    title: "Surgical Procedure",
+    list: createSidebarList(surgical, "surgical"),
+  },
+  {
+    title: "Cosmetic Procedure",
+    list: createSidebarList(cosmetic, "cosmetic"),
+  },
+  {
+    title: "Location",
+    list: createSidebarList(location, "location"),
+  },
 ];
 
 const menu: TSubMenuList[] = [
@@ -31,17 +44,19 @@ export const Menu = ({}) => {
     setToggle(!toggle);
   };
 
-  const renderMenuList = ({ title, list, href }: TMenuList) => {
+  const renderMenuList = ({ title, list }: TMenuList) => {
     return (
       <section key={title} className={styles.section}>
         <h2 className={styles.title}>{title}</h2>
 
         <div className={styles.chip_wrapper}>
-          {list.map((name) => (
-            <Link key={name} href={href}>
-              <Chip>{name}</Chip>
-            </Link>
-          ))}
+          {list.map(({ href, title }) => {
+            return (
+              <Link key={title} href={href} onClick={() => onToggle()}>
+                <Chip>{title}</Chip>
+              </Link>
+            );
+          })}
         </div>
       </section>
     );
@@ -50,7 +65,7 @@ export const Menu = ({}) => {
   const renderSubMenu = ({ title, href }: TSubMenuList) => {
     return (
       <div className={styles.subMenu} key={title}>
-        <Link href={href}>
+        <Link href={href} onClick={() => onToggle()}>
           <nav className={styles.title}>{title}</nav>
         </Link>
       </div>
