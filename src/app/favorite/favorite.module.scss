@@ -1,0 +1,30 @@
+.btn_wrapper {
+  display: flex;
+  justify-content: flex-end;
+
+  margin: 1rem;
+}
+
+.card_wrapper {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  position: relative;
+}
+
+.check {
+  position: absolute;
+  z-index: 22;
+
+  top: 12px;
+  right: 12px;
+
+  cursor: pointer;
+}
