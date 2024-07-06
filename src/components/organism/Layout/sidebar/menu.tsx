@@ -13,7 +13,7 @@ import { createSidebarPath } from "@/utils";
 type TSubMenuList = { title: string; href: string };
 type TMenuList = {
   title: string;
-  list: { title: string; href: string }[];
+  list: { menu: string; href: string }[];
 };
 
 const menuList: TMenuList[] = [
@@ -32,8 +32,8 @@ const menuList: TMenuList[] = [
 ];
 
 const menu: TSubMenuList[] = [
-  { title: "Favorite", href: "#" },
-  { title: "Event", href: "#" },
+  { title: "Favorite", href: "/favorite" },
+  { title: "Event", href: "/event" },
   { title: "About Us", href: "#" },
 ];
 
@@ -50,12 +50,12 @@ export const Menu = ({}) => {
         <h2 className={styles.title}>{title}</h2>
 
         <div className={styles.chip_wrapper}>
-          {list.map(({ href, title }) => {
+          {list.map(({ href, menu }, idx) => {
             const isHref = title === "Location" ? href : "#";
 
             return (
-              <Link key={title} href={isHref} onClick={() => onToggle()}>
-                <Chip>{title}</Chip>
+              <Link key={menu} href={isHref} onClick={() => onToggle()}>
+                <Chip>{menu}</Chip>
               </Link>
             );
           })}
