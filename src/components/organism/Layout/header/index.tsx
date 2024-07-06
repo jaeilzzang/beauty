@@ -2,10 +2,9 @@ import { PropsWithChildren } from "react";
 
 import styles from "./header.module.scss";
 
-import Image from "next/image";
-import Link from "next/link";
-
 import { Menu } from "../sidebar/menu";
+import Logo from "@/components/molecules/logo";
+import PageName from "@/components/molecules/page-name";
 
 export const Header = ({}: PropsWithChildren) => {
   return (
@@ -13,9 +12,7 @@ export const Header = ({}: PropsWithChildren) => {
       <div className={styles.wrapper}>
         <Menu />
 
-        <Link href={"/"}>
-          <Image width={42} height={42} src={"/logo/logo.webp"} alt="logo" />
-        </Link>
+        <PageName />
 
         <div>Mypage</div>
       </div>
