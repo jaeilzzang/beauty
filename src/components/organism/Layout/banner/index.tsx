@@ -15,6 +15,7 @@ import Image from "next/image";
 import styles from "./banner.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import Link from "next/link";
 
 export const Banner = () => {
   const setting: SwiperOptions = {
@@ -35,18 +36,24 @@ export const Banner = () => {
       {/* todo map method */}
       <SwiperSlide>
         <div className={styles.banner}>
-          <Image fill src={"/banner/banner1.jpeg"} alt="banner1" />
+          <Link href={"/recommend/1"}>
+            <Image fill src={"/banner/banner1.jpeg"} alt="banner1" />
+          </Link>
         </div>
       </SwiperSlide>
       <SwiperSlide>
         <div className={styles.banner}>
-          <Image fill src={"/banner/banner2.jpeg"} alt="banner2" />
+          <Link href={"/recommend/2"}>
+            <Image fill src={"/banner/banner2.jpeg"} alt="banner2" />
+          </Link>
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className={styles.banner}>
-          <Image fill src={"/banner/banner3.jpeg"} alt="banner3" />
-        </div>
+        <Link href={"/recommend/3"}>
+          <div className={styles.banner}>
+            <Image fill src={"/banner/banner3.jpeg"} alt="banner3" />
+          </div>
+        </Link>
       </SwiperSlide>
     </Swiper>
   );

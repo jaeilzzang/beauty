@@ -2,8 +2,8 @@ import "@/styles/_reset.scss";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Footer } from "@/components/organism/Layout/footer";
-import { Header } from "@/components/organism/Layout/header";
+import { Footer } from "@/components/organism/layout/footer";
+import { Header } from "@/components/organism/layout/header";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -1,4 +1,4 @@
-import { Banner } from "@/components/organism/Layout/banner";
+import { Banner } from "@/components/organism/layout/banner";
 import Image from "next/image";
 import Link from "next/link";
 

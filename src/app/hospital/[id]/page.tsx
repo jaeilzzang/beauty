@@ -2,7 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 import styles from "./hospitalDetail.module.scss";
-import Tab from "./components/tab";
+import HospitalTab from "./components/tab";
 
 const HospitalDetailPage = () => {
   return (
@@ -12,7 +12,7 @@ const HospitalDetailPage = () => {
       </div>
 
       {/* tab */}
-      <Tab />
+      <HospitalTab />
     </main>
   );
 };

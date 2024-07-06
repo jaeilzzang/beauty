@@ -8,7 +8,7 @@ import Portal from "@/components/template/modal";
 import { cosmetic, location, surgical } from "@/constants";
 import { Chip } from "@/components/atoms/chip";
 import Link from "next/link";
-import { createSidebarList } from "@/utils";
+import { createSidebarPath } from "@/utils";
 
 type TSubMenuList = { title: string; href: string };
 type TMenuList = {
@@ -19,15 +19,15 @@ type TMenuList = {
 const menuList: TMenuList[] = [
   {
     title: "Surgical Procedure",
-    list: createSidebarList(surgical, "surgical"),
+    list: createSidebarPath(surgical, "surgical"),
   },
   {
     title: "Cosmetic Procedure",
-    list: createSidebarList(cosmetic, "cosmetic"),
+    list: createSidebarPath(cosmetic, "cosmetic"),
   },
   {
     title: "Location",
-    list: createSidebarList(location, "location"),
+    list: createSidebarPath(location, "location"),
   },
 ];
 
@@ -51,8 +51,10 @@ export const Menu = ({}) => {
 
         <div className={styles.chip_wrapper}>
           {list.map(({ href, title }) => {
+            const isHref = title === "Location" ? href : "#";
+
             return (
-              <Link key={title} href={href} onClick={() => onToggle()}>
+              <Link key={title} href={isHref} onClick={() => onToggle()}>
                 <Chip>{title}</Chip>
               </Link>
             );

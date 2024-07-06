@@ -1,37 +1,78 @@
-import Image from "next/image";
 import React from "react";
 
 import styles from "./locationDetail.module.scss";
+import { HospitalCard } from "@/components/molecules/card";
 
 const LocationDetailPage = () => {
-  const Card = () => {
-    return (
-      <article>
-        <div className={styles.thumbnail_box}>
-          <Image fill src={`/hospital/h1.jpeg`} alt="h1" priority />
-        </div>
-        <p>hospital name</p>
-      </article>
-    );
-  };
-
   return (
     <main>
       <div>google map</div>
       <section className={styles.section}>
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
-        {Card()}
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
+        <HospitalCard
+          src={`/hospital/h1.jpeg`}
+          alt={"hum"}
+          name={"hospital name"}
+        />
         {/* tab */}
         {/* <Tab /> */}{" "}
       </section>

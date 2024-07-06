@@ -1,0 +1,41 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.surgical {
+  padding: 1rem 0;
+
+  //   background-color: brown;
+}
+
+.surgical_ul {
+  display: flex;
+  align-items: center;
+
+  margin: 1rem 0;
+  margin-left: 1rem;
+
+  gap: 1rem;
+}
+
+.hospital {
+  display: flex;
+  gap: 1rem;
+}
+
+.hospital_img {
+  flex: 1;
+}
+
+.hospital_info {
+  flex: 1;
+
+  text-align: right;
+
+  p {
+    padding: 1rem;
+    background-color: red;
+  }
+}
