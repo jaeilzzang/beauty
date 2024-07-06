@@ -12,6 +12,7 @@ import {
   HospitalCard,
   ReviewCard,
 } from "@/components/molecules/card";
+import { ROUTE } from "@/router";
 
 const RecommendTab = () => {
   const currentTab = useSearchParams().get(TAB) || (tabList[0].key as TTabKey);
@@ -19,7 +20,7 @@ const RecommendTab = () => {
   const Component: Record<TTabKey & string, JSX.Element> = {
     event: (
       <EventCard
-        href="/event/1"
+        href={ROUTE.EVENT_DETAIL}
         src={"/banner/banner1.jpeg"}
         alt={""}
         title={""}

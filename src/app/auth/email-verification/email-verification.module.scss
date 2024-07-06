@@ -1,0 +1,23 @@
+.main {
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.25rem;
+}
+
+.code {
+  position: relative;
+}
+
+.timer {
+  position: absolute;
+  bottom: 35%;
+  right: 5%;
+
+  color: $red;
+
+  font-weight: 300;
+  font-size: 0.875rem;
+}

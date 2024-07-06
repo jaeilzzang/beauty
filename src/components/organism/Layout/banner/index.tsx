@@ -16,6 +16,7 @@ import styles from "./banner.module.scss";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
+import { ROUTE } from "@/router";
 
 export const Banner = () => {
   const setting: SwiperOptions = {
@@ -36,7 +37,7 @@ export const Banner = () => {
       {/* todo map method */}
       <SwiperSlide>
         <div className={styles.banner}>
-          <Link href={"/recommend/1"}>
+          <Link href={ROUTE.RECOMMEND_DETAIL}>
             <Image fill src={"/banner/banner1.jpeg"} alt="banner1" />
           </Link>
         </div>

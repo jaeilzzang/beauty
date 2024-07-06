@@ -3,8 +3,9 @@ import { PropsWithChildren } from "react";
 import styles from "./header.module.scss";
 
 import { Menu } from "../sidebar/menu";
-import Logo from "@/components/molecules/logo";
+
 import PageName from "@/components/molecules/page-name";
+import Auth from "@/components/molecules/auth";
 
 export const Header = ({}: PropsWithChildren) => {
   return (
@@ -14,7 +15,7 @@ export const Header = ({}: PropsWithChildren) => {
 
         <PageName />
 
-        <div>Mypage</div>
+        <Auth />
       </div>
     </header>
   );

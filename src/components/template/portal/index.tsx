@@ -8,7 +8,9 @@ const Portal = ({ children }: { children: React.ReactElement }) => {
 
   useEffect(() => {
     setMounted(true);
-    return () => setMounted(false);
+    return () => {
+      setMounted(false);
+    };
   }, []);
 
   if (typeof window === "undefined") return null;

@@ -1,0 +1,22 @@
+.input_form {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.label {
+  display: flex;
+
+  padding: 0.75rem 1rem;
+
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.input {
+  margin-left: auto;
+
+  min-width: 70%;
+
+  outline: none;
+  border: none;
+}

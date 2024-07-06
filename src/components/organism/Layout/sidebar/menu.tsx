@@ -4,11 +4,12 @@ import { MenuIcon } from "@icons/menu";
 import styles from "./menu.module.scss";
 import { useState } from "react";
 import { CancelIcon } from "@/components/icons/cancel";
-import Portal from "@/components/template/modal";
+import Portal from "@/components/template/portal";
 import { cosmetic, location, surgical } from "@/constants";
 import { Chip } from "@/components/atoms/chip";
 import Link from "next/link";
 import { createSidebarPath } from "@/utils";
+import { ROUTE } from "@/router";
 
 type TSubMenuList = { title: string; href: string };
 type TMenuList = {
@@ -32,8 +33,8 @@ const menuList: TMenuList[] = [
 ];
 
 const menu: TSubMenuList[] = [
-  { title: "Favorite", href: "/favorite" },
-  { title: "Event", href: "/event" },
+  { title: "Favorite", href: ROUTE.FAVORITE },
+  { title: "Event", href: ROUTE.EVENT },
   { title: "About Us", href: "#" },
 ];
 

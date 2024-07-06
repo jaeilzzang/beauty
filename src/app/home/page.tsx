@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
+import { ROUTE } from "@/router";
 
 export default function Home() {
   return (
@@ -48,7 +49,7 @@ export default function Home() {
         <div className={styles.article_wrapper}>
           {Array.from({ length: 5 }, (v, i) => (
             <article key={i}>
-              <Link href={"/hospital/1"}>
+              <Link href={ROUTE.HOSPITAL_DETAIL}>
                 <div className={styles.thumbnail_box}>
                   <Image
                     fill
