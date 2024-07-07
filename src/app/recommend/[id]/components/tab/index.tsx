@@ -20,7 +20,7 @@ const RecommendTab = () => {
   const Component: Record<TTabKey & string, JSX.Element> = {
     event: (
       <EventCard
-        href={ROUTE.EVENT_DETAIL}
+        href={ROUTE.EVENT_DETAIL + 1}
         src={"/banner/banner1.jpeg"}
         alt={""}
         title={""}

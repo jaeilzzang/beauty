@@ -22,12 +22,7 @@ export default function Home() {
             <article key={i}>
               <Link href={"#"}>
                 <div className={styles.thumbnail_box}>
-                  <Image
-                    fill
-                    src={`/hospital/h${i + 1}.jpeg`}
-                    alt="h1"
-                    priority
-                  />
+                  <Image fill src={`/hospital/h${i + 1}.jpeg`} alt="h1" />
                 </div>
               </Link>
             </article>
@@ -42,21 +37,18 @@ export default function Home() {
 
         <div className={styles.location_wrapper}>
           {location.map((el) => (
-            <Chip key={el}>{el}</Chip>
+            <Link key={el} href={ROUTE.LOCATION_DETAIL + el}>
+              <Chip>{el}</Chip>
+            </Link>
           ))}
         </div>
 
         <div className={styles.article_wrapper}>
           {Array.from({ length: 5 }, (v, i) => (
             <article key={i}>
-              <Link href={ROUTE.HOSPITAL_DETAIL}>
+              <Link href={ROUTE.HOSPITAL_DETAIL + i}>
                 <div className={styles.thumbnail_box}>
-                  <Image
-                    fill
-                    src={`/hospital/h${i + 1}.jpeg`}
-                    alt="h1"
-                    priority
-                  />
+                  <Image fill src={`/hospital/h${i + 1}.jpeg`} alt="h1" />
                 </div>
               </Link>
             </article>

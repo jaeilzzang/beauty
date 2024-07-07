@@ -37,7 +37,7 @@ export const Banner = () => {
       {/* todo map method */}
       <SwiperSlide>
         <div className={styles.banner}>
-          <Link href={ROUTE.RECOMMEND_DETAIL}>
+          <Link href={ROUTE.RECOMMEND_DETAIL + 1}>
             <Image fill src={"/banner/banner1.jpeg"} alt="banner1" />
           </Link>
         </div>

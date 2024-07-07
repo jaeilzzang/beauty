@@ -24,6 +24,10 @@ const ModalOverlay = ({
     } else {
       document.body.style.overflow = "auto";
     }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [open]);
 
   const handleOutsideClick = (e: MouseEvent<HTMLDivElement>) => {

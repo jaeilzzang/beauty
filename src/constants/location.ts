@@ -5,4 +5,4 @@ export const location = [
   "Hongdae",
   "Chungdam",
   "Songdo",
-];
+] as const;

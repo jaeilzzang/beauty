@@ -20,7 +20,7 @@ const EventTab = () => {
   return (
     <>
       <EventCard
-        href={ROUTE.EVENT_DETAIL}
+        href={ROUTE.EVENT_DETAIL + 1}
         src="/img/thumbnail.jpeg"
         alt="thumbnail"
         date="date"
