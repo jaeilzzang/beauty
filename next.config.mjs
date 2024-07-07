@@ -6,6 +6,14 @@ const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        hostname: "afsfroagcvtulsttshvc.supabase.co",
+        protocol: "https",
+      },
+    ],
+  },
   sassOptions: {
     includePaths: [path.join(__dirname, "styles")],
     prependData: `@import "src/styles/_variables.scss"; @import "src/styles/_mixins.scss"; @import "src/styles/animation.scss";`,

@@ -3,14 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 
 import styles from "./home.module.scss";
+
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
+import { getBanner } from "@/apis/banner";
 
-export default function Home() {
+export default async function Home() {
+  const bannerItem = await getBanner();
+
   return (
     <main>
-      <Banner />
+      <Banner bannerItem={bannerItem} />
 
       <section className={styles.section}>
         <div className={styles.text_wrapper}>

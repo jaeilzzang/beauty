@@ -17,8 +17,13 @@ import styles from "./banner.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { ROUTE } from "@/router";
+import { BannerOutputDto } from "@/apis/banner/banner.dto";
 
-export const Banner = () => {
+interface BannerProps {
+  bannerItem: BannerOutputDto[];
+}
+
+export const Banner = ({ bannerItem }: BannerProps) => {
   const setting: SwiperOptions = {
     simulateTouch: true,
     grabCursor: true,
@@ -35,27 +40,20 @@ export const Banner = () => {
   return (
     <Swiper {...setting}>
       {/* todo map method */}
-      <SwiperSlide>
-        <div className={styles.banner}>
-          <Link href={ROUTE.RECOMMEND_DETAIL + 1}>
-            <Image fill src={"/banner/banner1.jpeg"} alt="banner1" />
+      {bannerItem.map(({ id, id_unique, imgurl, name }) => (
+        <SwiperSlide key={id_unique}>
+          <Link href={ROUTE.RECOMMEND_DETAIL + id}>
+            <div className={styles.banner}>
+              <Image
+                fill
+                src={imgurl}
+                alt={name}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            </div>
           </Link>
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        <div className={styles.banner}>
-          <Link href={"/recommend/2"}>
-            <Image fill src={"/banner/banner2.jpeg"} alt="banner2" />
-          </Link>
-        </div>
-      </SwiperSlide>
-      <SwiperSlide>
-        <Link href={"/recommend/3"}>
-          <div className={styles.banner}>
-            <Image fill src={"/banner/banner3.jpeg"} alt="banner3" />
-          </div>
-        </Link>
-      </SwiperSlide>
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 };
