@@ -2,14 +2,15 @@
 
 import { MenuIcon } from "@icons/menu";
 import styles from "./menu.module.scss";
-import { useState } from "react";
+
 import { CancelIcon } from "@/components/icons/cancel";
-import Portal from "@/components/template/portal";
+import Portal from "@/components/common/portal";
 import { cosmetic, location, surgical } from "@/constants";
 import { Chip } from "@/components/atoms/chip";
 import Link from "next/link";
 import { createSidebarPath } from "@/utils";
 import { ROUTE } from "@/router";
+import useModal from "@/hooks/useModal";
 
 type TSubMenuList = { title: string; href: string };
 type TMenuList = {
@@ -39,11 +40,7 @@ const menu: TSubMenuList[] = [
 ];
 
 export const Menu = ({}) => {
-  const [toggle, setToggle] = useState<boolean>(false);
-
-  const onToggle = () => {
-    setToggle(!toggle);
-  };
+  const { handleOpen, open } = useModal();
 
   const renderMenuList = ({ title, list }: TMenuList) => {
     return (
@@ -55,7 +52,7 @@ export const Menu = ({}) => {
             const isHref = title === "Location" ? href : "#";
 
             return (
-              <Link key={menu} href={isHref} onClick={() => onToggle()}>
+              <Link key={menu} href={isHref} onClick={handleOpen}>
                 <Chip>{menu}</Chip>
               </Link>
             );
@@ -68,7 +65,7 @@ export const Menu = ({}) => {
   const renderSubMenu = ({ title, href }: TSubMenuList) => {
     return (
       <div className={styles.subMenu} key={title}>
-        <Link href={href} onClick={() => onToggle()}>
+        <Link href={href} onClick={handleOpen}>
           <nav className={styles.title}>{title}</nav>
         </Link>
       </div>
@@ -77,13 +74,13 @@ export const Menu = ({}) => {
 
   return (
     <div className={styles.menu}>
-      <MenuIcon onClick={onToggle} />
+      <MenuIcon onClick={handleOpen} />
 
-      {toggle && (
+      {open && (
         <Portal>
           <div className={styles.overlay}>
             <div className={styles.open}>
-              <div className={styles.cancel} onClick={onToggle}>
+              <div className={styles.cancel} onClick={handleOpen}>
                 <CancelIcon />
               </div>
 

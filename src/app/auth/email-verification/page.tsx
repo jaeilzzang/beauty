@@ -2,13 +2,13 @@
 
 import Button from "@/components/atoms/button";
 import InputField from "@/components/molecules/form/input-field";
-import { FormEventHandler, useEffect, useState } from "react";
+import { FormEventHandler, useState } from "react";
 
 import styles from "./email-verification.module.scss";
 import { clsx } from "clsx";
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
-import useTimer from "@/hooks/useTImer";
+import useTimer from "@/hooks/useTimer";
 
 const EmailVerificationPage = () => {
   const router = useRouter();
