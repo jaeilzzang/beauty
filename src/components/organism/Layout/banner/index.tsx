@@ -17,13 +17,13 @@ import styles from "./banner.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { ROUTE } from "@/router";
-import { BannerOutputDto } from "@/apis/banner/banner.dto";
+import { BannerOutputDto } from "@/app/api/banner/banner.dto";
 
 interface BannerProps {
   bannerItem: BannerOutputDto[];
 }
 
-export const Banner = ({ bannerItem }: BannerProps) => {
+export const Banner = ({ bannerItem = [] }: BannerProps) => {
   const setting: SwiperOptions = {
     simulateTouch: true,
     grabCursor: true,

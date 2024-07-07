@@ -7,7 +7,7 @@ import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
-import { getBanner } from "@/apis/banner";
+import { getBanner } from "@/app/api/banner";
 
 export default async function Home() {
   const bannerItem = await getBanner();
