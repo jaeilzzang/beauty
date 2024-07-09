@@ -1,8 +1,9 @@
 "use server";
 
+import { ROUTE } from "@/router";
 import { createActionRedirectUrl } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
-
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -11,26 +12,17 @@ const schema = z.object({
   // validation
   email: z.string().email({ message: "Invalid Email" }),
   password: z.string().min(6),
-  name: z.string().min(3),
-  nickname: z.string().min(3, { message: "least 3 character" }),
-  nationality: z.string(),
 });
 
-const signUpActions = async (prevState: any, formData: FormData) => {
+export const signInActions = async (prevState: any, formData: FormData) => {
   const referer = headers().get("referer") as string;
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const name = formData.get("name") as string;
-  const nickname = formData.get("nickname") as string;
-  const nationality = formData.get("nationality") as string;
 
   const validation = schema.safeParse({
     email,
     password,
-    name,
-    nickname,
-    nationality,
   });
 
   if (!validation.success) {
@@ -41,13 +33,15 @@ const signUpActions = async (prevState: any, formData: FormData) => {
   }
 
   const supabase = createClient();
-  const { data, error } = await supabase.auth.signUp({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
-  console.log(data, "data");
+  if (!error) {
+    revalidatePath(ROUTE.HOME);
+    redirect(ROUTE.HOME);
+  }
+
   redirect(createActionRedirectUrl(referer, error?.message));
 };
-
-export default signUpActions;

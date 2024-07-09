@@ -1,7 +1,7 @@
 "use server";
 
 import { createActionRedirectUrl } from "@/utils";
-import { supabaseServer } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -27,7 +27,8 @@ export const sendCodeActions = async (prevState: any, formData: FormData) => {
     };
   }
 
-  const { data, error } = await supabaseServer.auth.signInWithOtp({
+  const supabase = createClient();
+  const { data, error } = await supabase.auth.signInWithOtp({
     email,
   });
 

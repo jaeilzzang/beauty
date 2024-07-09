@@ -7,14 +7,14 @@ import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
-import { getBanner } from "@/app/api/banner";
+// import { getBanner } from "@/app/api/banner";
 
 export default async function Home() {
-  const bannerItem = await getBanner();
+  // const bannerItem = await getBanner();
 
   return (
     <main>
-      <Banner bannerItem={bannerItem} />
+      <Banner bannerItem={[]} />
 
       <section className={styles.section}>
         <div className={styles.text_wrapper}>
