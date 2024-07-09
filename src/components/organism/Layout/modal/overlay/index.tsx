@@ -5,16 +5,20 @@ import { MouseEvent, PropsWithChildren, useEffect, useRef } from "react";
 import Portal from "@/components/common/portal";
 
 import styles from "./modal-overlay.module.scss";
+import { clsx } from "clsx";
 
 interface ModalOverlayProps {
   open: boolean;
   handleClick: () => void;
+
+  type?: "alert" | "overlay";
 }
 
 const ModalOverlay = ({
   children,
   open,
   handleClick,
+  type = "overlay",
 }: PropsWithChildren<ModalOverlayProps>) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +49,13 @@ const ModalOverlay = ({
         onClick={handleOutsideClick}
         className={styles.overlay}
       >
-        <div className={styles.open}>{children}</div>
+        <div
+          className={clsx(styles.open, {
+            [styles.alert]: type === "alert",
+          })}
+        >
+          {children}
+        </div>
       </div>
     </Portal>
   );

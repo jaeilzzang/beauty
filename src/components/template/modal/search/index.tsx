@@ -10,7 +10,7 @@ interface SearchModalProps {
 
   itemList: Array<string>;
 
-  onClick: () => void;
+  onClick: (value: string) => void;
 
   onCancel: () => void;
 }
@@ -50,7 +50,7 @@ export const SearchModal = ({
               key={i}
               className={styles.li}
               onClick={() => {
-                onClick();
+                onClick(name);
                 onCancel();
               }}
             >

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 interface useTimerProps {
   time: number;
 
-  isStart: boolean;
+  isStart: boolean | undefined;
 
   setTimeOver: Dispatch<SetStateAction<boolean>>;
   timeOver: boolean;

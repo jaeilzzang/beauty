@@ -3,7 +3,7 @@
 import React, { forwardRef } from "react";
 import styles from "./input-field.module.scss";
 
-interface InputFieldProps extends React.HTMLAttributes<HTMLInputElement> {
+interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
   name: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;

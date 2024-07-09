@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  *
  * modal state 일괄적으로 관리하기 위해
  */
-const useModal = () => {
+const useModal = (initState?: boolean) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof initState === "boolean") {
+      setOpen(initState);
+    }
+  }, [initState]);
 
   const handleOpen = () => {
     setOpen((prev) => !prev);

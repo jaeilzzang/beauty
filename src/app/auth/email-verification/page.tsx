@@ -2,78 +2,85 @@
 
 import Button from "@/components/atoms/button";
 import InputField from "@/components/molecules/form/input-field";
-import { FormEventHandler, useState } from "react";
 
 import styles from "./email-verification.module.scss";
 import { clsx } from "clsx";
+
+import { sendCodeActions } from "./actions";
+
+import { AlertModal } from "@/components/template/modal/alert";
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
+import { ErrorMessage } from "@/components/atoms/message/error";
+import { useFormAction } from "@/hooks/useFormAction";
 import useTimer from "@/hooks/useTimer";
+import { useEffect, useState } from "react";
+import { verifyCodeActions } from "./actions/verifyCodeActions";
 
 const EmailVerificationPage = () => {
   const router = useRouter();
 
-  const [sendCode, setSendCode] = useState<boolean>(false);
   const [timeOver, setTimeOver] = useState<boolean>(false);
+  const [sendCode, setSendCode] = useState<boolean>(false);
+
+  const sendCodeRes = useFormAction({ action: sendCodeActions });
+  const verifyCodeRes = useFormAction({ action: verifyCodeActions });
 
   const { minute, second } = useTimer({
-    setTimeOver,
     isStart: sendCode,
-    timeOver: timeOver,
-    time: 600,
+    time: 60,
+    timeOver,
+    setTimeOver,
   });
 
-  // send code  before
-  const renderSendCode = () => {
-    const onSubmit: FormEventHandler = (e) => {
-      e.preventDefault();
+  useEffect(() => {
+    setSendCode(!!sendCodeRes.isSuccess);
+  }, [sendCodeRes.isFetching, sendCodeRes.isSuccess]);
 
-      setSendCode(true);
-    };
-
-    return (
-      <form onSubmit={onSubmit}>
-        <InputField label={"Email"} name={"email"} />
-
-        <Button color="blue" fullWidth>
-          Verification Code
-        </Button>
-      </form>
-    );
-  };
-
-  const renderVerificationCode = () => {
-    const onSubmit: FormEventHandler = (e) => {
-      e.preventDefault();
-
-      router.push(ROUTE.SIGN_UP);
-    };
-
-    return (
-      <form onSubmit={onSubmit}>
-        <InputField label={"Email"} name={"email"} />
-
-        <div className={styles.code}>
-          <InputField label={"Code"} name={"code"} />
-          <div className={styles.timer}>{`${minute}분 ${second}초`}</div>
-        </div>
-
-        <Button
-          disabled={process.env.NODE_ENV === "development" ? false : timeOver}
-          color="blue"
-          fullWidth
-        >
-          Next
-        </Button>
-      </form>
-    );
-  };
+  console.log(sendCodeRes, verifyCodeRes, sendCode);
 
   return (
     <main className={clsx("container", styles.main)}>
       <h1 className={styles.title}>Email Verification</h1>
 
-      {sendCode ? renderVerificationCode() : renderSendCode()}
+      <form
+        action={!sendCode ? sendCodeRes.formAction : verifyCodeRes.formAction}
+      >
+        <InputField label={"Email"} name={"email"} />
+        <ErrorMessage message={sendCodeRes.state.error.email} />
+
+        {sendCode && (
+          <>
+            <div className={styles.code}>
+              <InputField label="Code" name="code" maxLength={6} />
+
+              <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
+            </div>
+            <Button color="blue" fullWidth disabled={timeOver}>
+              Verification Code
+            </Button>
+          </>
+        )}
+
+        <Button
+          color="blue"
+          fullWidth
+          disabled={sendCodeRes.isError || sendCodeRes.formStatus.pending}
+        >
+          Send Code
+        </Button>
+      </form>
+
+      <AlertModal
+        open={sendCodeRes.isFetching}
+        onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
+      >
+        <p>
+          {sendCodeRes.isSuccess
+            ? "sent to link, please check your email"
+            : sendCodeRes.errorMessage}
+        </p>
+      </AlertModal>
     </main>
   );
 };
