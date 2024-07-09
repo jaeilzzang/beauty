@@ -15,6 +15,7 @@ import signUpActions from "./actions/sign-up.action";
 import { AlertModal } from "@/components/template/modal/alert";
 import { ErrorMessage } from "@/components/atoms/message/error";
 import { useFormAction } from "@/hooks/useFormAction";
+import { supabaseClient } from "@/utils/supabase/client";
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -45,8 +46,15 @@ const SignUpPage = () => {
     },
   ];
 
+  const getUser = async () => {
+    const { data } = await supabaseClient.auth.getSession();
+
+    console.log(data);
+  };
+
   return (
     <main className="container">
+      <div onClick={getUser}> getUser</div>
       <form action={formAction}>
         {inputFields.map(
           ({ label, name, onClick, onFocus, readOnly, value }) => (
@@ -54,6 +62,7 @@ const SignUpPage = () => {
               <InputField
                 label={label}
                 name={name}
+                type={name === "password" ? "password" : "text"}
                 {...(readOnly && { readOnly })}
                 {...(value && { value })}
                 onClick={onClick}

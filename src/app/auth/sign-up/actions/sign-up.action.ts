@@ -1,6 +1,7 @@
 "use server";
 
 import { createActionRedirectUrl } from "@/utils";
+import { supabaseServer } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -15,7 +16,7 @@ const schema = z.object({
 });
 
 const signUpActions = async (prevState: any, formData: FormData) => {
-  const referer = headers().get("referer");
+  const referer = headers().get("referer") as string;
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -39,6 +40,14 @@ const signUpActions = async (prevState: any, formData: FormData) => {
       error: validation.error.flatten().fieldErrors,
     };
   }
+
+  const { data, error } = await supabaseServer.auth.signUp({
+    email,
+    password,
+  });
+
+  console.log(data, "data");
+  redirect(createActionRedirectUrl(referer, error?.message));
 };
 
 export default signUpActions;

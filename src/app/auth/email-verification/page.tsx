@@ -43,9 +43,7 @@ const EmailVerificationPage = () => {
     <main className={clsx("container", styles.main)}>
       <h1 className={styles.title}>Email Verification</h1>
 
-      <form
-        action={!sendCode ? sendCodeRes.formAction : verifyCodeRes.formAction}
-      >
+      <form>
         <InputField label={"Email"} name={"email"} />
         <ErrorMessage message={sendCodeRes.state.error.email} />
 
@@ -56,7 +54,12 @@ const EmailVerificationPage = () => {
 
               <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
             </div>
-            <Button color="blue" fullWidth disabled={timeOver}>
+            <Button
+              formAction={verifyCodeRes.formAction}
+              color="blue"
+              fullWidth
+              disabled={timeOver}
+            >
               Verification Code
             </Button>
           </>
@@ -65,6 +68,7 @@ const EmailVerificationPage = () => {
         <Button
           color="blue"
           fullWidth
+          formAction={sendCodeRes.formAction}
           disabled={sendCodeRes.isError || sendCodeRes.formStatus.pending}
         >
           Send Code

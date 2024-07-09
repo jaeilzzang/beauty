@@ -1,8 +1,7 @@
 import { ROUTE } from "@/router";
 import { createActionRedirectUrl } from "@/utils";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseServer } from "@/utils/supabase/server";
 
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -23,8 +22,7 @@ export async function GET(request: Request) {
   }
 
   if (code) {
-    const supabase = createRouteHandlerClient({ cookies });
-    await supabase.auth.exchangeCodeForSession(code);
+    await supabaseServer.auth.exchangeCodeForSession(code);
   }
 
   return NextResponse.redirect(ROUTE.SIGN_UP);
