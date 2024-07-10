@@ -1,25 +1,22 @@
 .overlay {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: -500px;
+  max-width: 430px;
   height: 100%;
-  background: rgb(219 219 219 / 40%);
+
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+  transition: left 0.3s ease;
+
+  padding: 20px;
+
+  background-color: white;
 
   z-index: 99;
 }
 
 .open {
-  display: block;
-  max-width: 430px;
-  overflow: auto;
-  height: 100%;
-  background: $white;
-
-  animation: slideIn-left-right 0.5s;
-
-  padding: 2rem;
-  box-sizing: border-box;
+  left: 0;
 }
 
 // sidebar cancel

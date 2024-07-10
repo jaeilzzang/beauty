@@ -11,6 +11,8 @@ import Link from "next/link";
 import { createSidebarPath } from "@/utils";
 import { ROUTE } from "@/router";
 import useModal from "@/hooks/useModal";
+import { clsx } from "clsx";
+import { useRef } from "react";
 
 type TSubMenuList = { title: string; href: string };
 type TMenuList = {
@@ -40,6 +42,8 @@ const menu: TSubMenuList[] = [
 ];
 
 export const Menu = ({}) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   const { handleOpen, open } = useModal();
 
   const renderMenuList = ({ title, list }: TMenuList) => {
@@ -48,7 +52,7 @@ export const Menu = ({}) => {
         <h2 className={styles.title}>{title}</h2>
 
         <div className={styles.chip_wrapper}>
-          {list.map(({ href, menu }, idx) => {
+          {list.map(({ href, menu }) => {
             const isHref = title === "Location" ? href : "#";
 
             return (
@@ -76,23 +80,21 @@ export const Menu = ({}) => {
     <div className={styles.menu}>
       <MenuIcon onClick={handleOpen} />
 
-      {open && (
-        <Portal>
-          <div className={styles.overlay}>
-            <div className={styles.open}>
-              <div className={styles.cancel} onClick={handleOpen}>
-                <CancelIcon />
-              </div>
-
-              {/* list menu */}
-              {menuList.map(renderMenuList)}
-
-              {/* sub menu */}
-              {menu.map(renderSubMenu)}
-            </div>
+      <Portal>
+        <div ref={modalRef} className={clsx(styles.overlay, {
+          [styles.open] :open
+        })}>
+          <div className={styles.cancel} onClick={handleOpen}>
+            <CancelIcon />
           </div>
-        </Portal>
-      )}
+
+          {/* list menu */}
+          {menuList.map(renderMenuList)}
+
+          {/* sub menu */}
+          {menu.map(renderSubMenu)}
+        </div>
+      </Portal>
     </div>
   );
 };

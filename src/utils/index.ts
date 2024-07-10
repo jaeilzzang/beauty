@@ -1,7 +1,15 @@
+type SidebarPath<T extends string> = {
+  menu: T;
+  href: string;
+};
+
 export const handleRouter = (tab: string) => (href: string) =>
   `?${tab}=${href}`;
 
-export const createSidebarPath = (list: string[], prefix: string) => {
+export const createSidebarPath = <T extends string>(
+  list: readonly T[],
+  prefix: string
+): SidebarPath<T>[] => {
   return list.map((menu) => ({
     menu,
     href: `/${prefix}/${menu.toLocaleLowerCase()}`,

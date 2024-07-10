@@ -7,10 +7,13 @@ import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
-// import { getBanner } from "@/app/api/banner";
+// import { getBanner } from "./api/banner";
+import { getHospital } from "./api/hospital";
 
 export default async function Home() {
   // const bannerItem = await getBanner();
+  const hospital = await getHospital();
+  // console.log(hospital, "bannerItem");
 
   return (
     <main>
@@ -48,11 +51,11 @@ export default async function Home() {
         </div>
 
         <div className={styles.article_wrapper}>
-          {Array.from({ length: 5 }, (v, i) => (
-            <article key={i}>
-              <Link href={ROUTE.HOSPITAL_DETAIL + i}>
+          {hospital.map(({ id, imageurls, name }) => (
+            <article key={id}>
+              <Link href={ROUTE.HOSPITAL_DETAIL + id}>
                 <div className={styles.thumbnail_box}>
-                  <Image fill src={`/hospital/h${i + 1}.jpeg`} alt="h1" />
+                  <Image fill src={imageurls[0]} alt="name" />
                 </div>
               </Link>
             </article>

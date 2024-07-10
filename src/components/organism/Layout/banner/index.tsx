@@ -17,7 +17,7 @@ import styles from "./banner.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { ROUTE } from "@/router";
-import { BannerOutputDto } from "@/app/api/banner/banner.dto";
+import { BannerOutputDto } from "@/app/home/api/banner/banner.dto";
 
 interface BannerProps {
   bannerItem: BannerOutputDto[];
@@ -39,7 +39,6 @@ export const Banner = ({ bannerItem = [] }: BannerProps) => {
 
   return (
     <Swiper {...setting}>
-      {/* todo map method */}
       {bannerItem.map(({ id, id_unique, imgurl, name }) => (
         <SwiperSlide key={id_unique}>
           <Link href={ROUTE.RECOMMEND_DETAIL + id}>
