@@ -41,5 +41,9 @@ export const verifyCodeActions = async (prevState: any, formData: FormData) => {
 
   console.log(data);
 
-  redirect(createActionRedirectUrl(referer, error?.message && error.message));
+  if (error) {
+    redirect(createActionRedirectUrl(referer, error?.message && error.message));
+  }
+
+  redirect(ROUTE.SIGN_UP);
 };

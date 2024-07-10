@@ -11,11 +11,12 @@ import Button from "@/components/atoms/button";
 import SignUpButton from "@/components/common/policy/privacy";
 import { useFormAction } from "@/hooks/useFormAction";
 import { signInActions } from "./actions";
+import { AlertModal } from "@/components/template/modal/alert";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
   const signinAction = useFormAction({ action: signInActions });
-
-  console.log(signinAction);
 
   return (
     <main className={clsx("container", styles.main)}>
@@ -24,9 +25,7 @@ const LoginPage = () => {
         <InputField type="password" label="Password" name="password" />
 
         <div className={styles.btn_group}>
-          <Button color="blue" onClick={() => console.log("first")}>
-            LOGIN
-          </Button>
+          <Button color="blue">LOGIN</Button>
 
           <SignUpButton />
         </div>
@@ -41,6 +40,13 @@ const LoginPage = () => {
       <div className={clsx(styles.center)}>
         <div>sns</div>
       </div>
+
+      <AlertModal
+        open={!!signinAction.errorMessage}
+        onCancel={() => router.replace(ROUTE.LOGIN)}
+      >
+        <p>{signinAction.errorMessage}</p>
+      </AlertModal>
     </main>
   );
 };

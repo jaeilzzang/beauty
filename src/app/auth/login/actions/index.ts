@@ -11,7 +11,11 @@ import { z } from "zod";
 const schema = z.object({
   // validation
   email: z.string().email({ message: "Invalid Email" }),
-  password: z.string().min(6),
+  password: z
+    .string()
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*_-]).{8,}$/, {
+      message: "Invalid Password",
+    }),
 });
 
 export const signInActions = async (prevState: any, formData: FormData) => {

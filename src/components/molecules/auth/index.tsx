@@ -11,7 +11,7 @@ const Auth = async () => {
   } = await supabase.auth.getUser();
 
   const href = user ? ROUTE.MY_PAGE : ROUTE.LOGIN;
-  const text = user ? "mypage" : "login";
+  const text = user ? user.email : "login";
 
   return (
     <div>

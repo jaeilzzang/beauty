@@ -16,15 +16,18 @@ import { useFormAction } from "@/hooks/useFormAction";
 import useTimer from "@/hooks/useTimer";
 import { useEffect, useState } from "react";
 import { verifyCodeActions } from "./actions/verifyCodeActions";
+import useModal from "@/hooks/useModal";
 
 const EmailVerificationPage = () => {
   const router = useRouter();
 
-  const [timeOver, setTimeOver] = useState<boolean>(false);
-  const [sendCode, setSendCode] = useState<boolean>(false);
+  const { setOpen, open } = useModal();
 
   const sendCodeRes = useFormAction({ action: sendCodeActions });
   const verifyCodeRes = useFormAction({ action: verifyCodeActions });
+
+  const [timeOver, setTimeOver] = useState<boolean>(false);
+  const [sendCode, setSendCode] = useState<boolean>(false);
 
   const { minute, second } = useTimer({
     isStart: sendCode,
@@ -34,10 +37,15 @@ const EmailVerificationPage = () => {
   });
 
   useEffect(() => {
-    setSendCode(!!sendCodeRes.isSuccess);
-  }, [sendCodeRes.isFetching, sendCodeRes.isSuccess]);
+    if (sendCodeRes.isSuccess) {
+      setOpen(true);
+    }
+  }, [sendCodeRes.isSuccess, open]);
 
-  console.log(sendCodeRes, verifyCodeRes, sendCode);
+  const handleTimerStart = () => {
+    setOpen(false);
+    setSendCode(true);
+  };
 
   return (
     <main className={clsx("container", styles.main)}>
@@ -45,7 +53,9 @@ const EmailVerificationPage = () => {
 
       <form>
         <InputField label={"Email"} name={"email"} />
-        <ErrorMessage message={sendCodeRes.state.error.email} />
+        {sendCodeRes.state.error && (
+          <ErrorMessage message={sendCodeRes.state.error?.email} />
+        )}
 
         {sendCode && (
           <>
@@ -75,15 +85,25 @@ const EmailVerificationPage = () => {
         </Button>
       </form>
 
+      {/* send success modal & verification timer start */}
+      <AlertModal open={open} onCancel={handleTimerStart}>
+        <p>sent to link, please check your email</p>
+      </AlertModal>
+
+      {/* send error modal */}
       <AlertModal
-        open={sendCodeRes.isFetching}
+        open={!!sendCodeRes.isError}
         onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
       >
-        <p>
-          {sendCodeRes.isSuccess
-            ? "sent to link, please check your email"
-            : sendCodeRes.errorMessage}
-        </p>
+        <p>{sendCodeRes.errorMessage}</p>
+      </AlertModal>
+
+      {/* verification fail modal */}
+      <AlertModal
+        open={!!verifyCodeRes.isError}
+        onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
+      >
+        <p>{verifyCodeRes.errorMessage}</p>
       </AlertModal>
     </main>
   );

@@ -10,7 +10,11 @@ import { z } from "zod";
 const schema = z.object({
   // validation
   email: z.string().email({ message: "Invalid Email" }),
-  password: z.string().min(6),
+  password: z
+    .string()
+    .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*_-]).{8,}$/, {
+      message: "Invalid Password",
+    }),
   name: z.string().min(3),
   nickname: z.string().min(3, { message: "least 3 character" }),
   nationality: z.string(),

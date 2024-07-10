@@ -28,13 +28,20 @@ export const sendCodeActions = async (prevState: any, formData: FormData) => {
   }
 
   const supabase = createClient();
+
   const { data, error } = await supabase.auth.signInWithOtp({
     email,
   });
 
   // todo
   // 이미 가입한 유저 response data 로 에외처리
-  console.log(data);
+  console.log(data, error);
 
-  redirect(createActionRedirectUrl(referer, error?.message && error.message));
+  if (error) {
+    redirect(createActionRedirectUrl(referer, error?.message && error.message));
+  }
+
+  return {
+    sendCode: true,
+  };
 };
