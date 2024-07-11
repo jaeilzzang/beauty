@@ -20,10 +20,12 @@ export const sendCodeActions = async (prevState: any, formData: FormData) => {
 
   const validatedFields = schema.safeParse({ email });
 
+  console.log(validatedFields);
   if (!validatedFields.success) {
+    console.log("first");
     return {
       ...prevState,
-      error: validatedFields.error.flatten().fieldErrors,
+      message: "Invalid Email",
     };
   }
 
@@ -39,9 +41,7 @@ export const sendCodeActions = async (prevState: any, formData: FormData) => {
 
   if (error) {
     redirect(createActionRedirectUrl(referer, error?.message && error.message));
+  } else {
+    redirect(createActionRedirectUrl(referer));
   }
-
-  return {
-    sendCode: true,
-  };
 };

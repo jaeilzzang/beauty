@@ -7,13 +7,20 @@ import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
-// import { getBanner } from "./api/banner";
-import { getHospital } from "./api/hospital";
+import { getBannerAPI } from "./api/banner";
+import { getHospitalBeautyAPI, getHospitalLocationAPI } from "./api/hospital";
+import { NoData } from "@/components/template/noData";
 
-export default async function Home() {
-  // const bannerItem = await getBanner();
-  const hospital = await getHospital();
-  // console.log(hospital, "bannerItem");
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { locationNum: string };
+}) {
+  // const bannerItem = await getBannerAPI();
+  const getBeauty = await getHospitalBeautyAPI();
+  const getLocation = await getHospitalLocationAPI({
+    locationNum: searchParams?.locationNum,
+  });
 
   return (
     <main>
@@ -24,17 +31,28 @@ export default async function Home() {
           <h2 className={styles.title}>New Beauty</h2>
           <p>Make Attraction</p>
         </div>
-        <div className={styles.article_wrapper}>
-          {Array.from({ length: 5 }, (v, i) => (
-            <article key={i}>
-              <Link href={"#"}>
-                <div className={styles.thumbnail_box}>
-                  <Image fill src={`/hospital/h${i + 1}.jpeg`} alt="h1" />
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
+
+        {getBeauty.length ? (
+          <div className={styles.article_wrapper}>
+            {getBeauty.map(({ id, imageurls, name }) => (
+              <article key={id}>
+                <Link href={"#"}>
+                  <div className={styles.thumbnail_box}>
+                    <Image
+                      fill
+                      src={imageurls[0]}
+                      alt={name}
+                      placeholder="blur"
+                      blurDataURL="/hospitalimg/hospital_default.png"
+                    />
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <NoData />
+        )}
       </section>
       <section className={styles.section}>
         <div className={styles.text_wrapper}>
@@ -43,24 +61,41 @@ export default async function Home() {
         </div>
 
         <div className={styles.location_wrapper}>
-          {location.map((el) => (
-            <Link key={el} href={ROUTE.LOCATION_DETAIL + el}>
-              <Chip>{el}</Chip>
+          {location.map((name, i) => (
+            <Link
+              key={name}
+              href={{
+                pathname: ROUTE.HOME,
+                query: { locationNum: i },
+              }}
+              scroll={false}
+            >
+              <Chip>{name}</Chip>
             </Link>
           ))}
         </div>
 
-        <div className={styles.article_wrapper}>
-          {hospital.map(({ id, imageurls, name }) => (
-            <article key={id}>
-              <Link href={ROUTE.HOSPITAL_DETAIL + id}>
-                <div className={styles.thumbnail_box}>
-                  <Image fill src={imageurls[0]} alt="name" />
-                </div>
-              </Link>
-            </article>
-          ))}
-        </div>
+        {getLocation.data.length ? (
+          <div className={styles.article_wrapper}>
+            {getLocation.data.map(({ id, imageurls, name }) => (
+              <article key={id}>
+                <Link href={ROUTE.HOSPITAL_DETAIL + id}>
+                  <div className={styles.thumbnail_box}>
+                    <Image
+                      fill
+                      src={imageurls[0]}
+                      alt={name}
+                      placeholder="blur"
+                      blurDataURL="/hospitalimg/hospital_default.png"
+                    />
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <NoData />
+        )}
       </section>
     </main>
   );

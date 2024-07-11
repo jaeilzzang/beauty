@@ -20,7 +20,7 @@ export const createActionRedirectUrl = (path: string, errorMsg?: string) => {
   const status = typeof errorMsg !== "undefined" ? "error" : "success";
 
   if (status === "error") {
-    return `${path}?status=${status}&errorMsg=${errorMsg}`;
+    return `${path}?status=${status}&msg=${errorMsg}`;
   }
 
   return `${path}?status=${status}`;

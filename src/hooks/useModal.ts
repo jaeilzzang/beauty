@@ -13,7 +13,7 @@ const useModal = (initState?: boolean) => {
     }
   }, [initState]);
 
-  const handleOpen = () => {
+  const handleOpenModal = () => {
     setOpen((prev) => {
       if (!prev) {
         document.body.style.overflow = "hidden";
@@ -27,7 +27,7 @@ const useModal = (initState?: boolean) => {
   return {
     open,
     setOpen,
-    handleOpen,
+    handleOpenModal,
   };
 };
 

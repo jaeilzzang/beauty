@@ -12,22 +12,51 @@ import { AlertModal } from "@/components/template/modal/alert";
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
 import { ErrorMessage } from "@/components/atoms/message/error";
-import { useFormAction } from "@/hooks/useFormAction";
+
 import useTimer from "@/hooks/useTimer";
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useRef, useState } from "react";
 import { verifyCodeActions } from "./actions/verifyCodeActions";
 import useModal from "@/hooks/useModal";
+
+import { useFormAction } from "@/hooks/useFormAction";
+import { emailRegExp } from "@/utils/regexp";
+import { fetchUtils } from "@/utils/fetch";
+
+export type State = {
+  type: "send" | "verify" | null;
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  message: string;
+};
 
 const EmailVerificationPage = () => {
   const router = useRouter();
 
-  const { setOpen, open } = useModal();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const verifyCode = useRef<HTMLInputElement>(null);
 
-  const sendCodeRes = useFormAction({ action: sendCodeActions });
-  const verifyCodeRes = useFormAction({ action: verifyCodeActions });
+  const { setOpen, open, handleOpenModal } = useModal();
 
   const [timeOver, setTimeOver] = useState<boolean>(false);
   const [sendCode, setSendCode] = useState<boolean>(false);
+
+  const initState: State = {
+    type: null,
+    isLoading: false,
+    isError: false,
+    isSuccess: false,
+    message: "",
+  };
+
+  const [status, setStatus] = useState<State>(initState);
+
+  const onResetState = () => {
+    setStatus(initState);
+  };
+
+  const isSend = status.type === "send";
+  const isVerify = status.type === "verify";
 
   const { minute, second } = useTimer({
     isStart: sendCode,
@@ -36,75 +65,96 @@ const EmailVerificationPage = () => {
     setTimeOver,
   });
 
-  useEffect(() => {
-    if (sendCodeRes.isSuccess) {
-      setOpen(true);
-    }
-  }, [sendCodeRes.isSuccess, open]);
+  console.log(status);
 
-  const handleTimerStart = () => {
+  const sendCodeSubmit: FormEventHandler = async (e) => {
+    e.preventDefault();
+
+    if (!emailRef.current) return;
+
+    const emailValue = emailRef.current.value;
+
+    if (!emailRegExp.test(emailValue)) {
+      setStatus((prev) => ({
+        ...prev,
+        type: "send",
+        message: "Invalid Email",
+        isError: true,
+      }));
+
+      return;
+    }
+
+    // fetching
+    console.log("fetching");
+
+    const res = await fetchUtils({
+      url: `http://localhost:3000/auth/email-verification/api/sendCode?email=${emailValue}`,
+    });
+
+    setStatus((prev) => ({
+      ...prev,
+      isSuccess: true,
+      isError: false,
+      isLoading: false,
+      message: "success",
+      type: "send",
+    }));
+
+    console.log(res);
+  };
+
+  const verifyCodeSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+
     setOpen(false);
     setSendCode(true);
   };
+
+  console.log(open);
 
   return (
     <main className={clsx("container", styles.main)}>
       <h1 className={styles.title}>Email Verification</h1>
 
-      <form>
-        <InputField label={"Email"} name={"email"} />
-        {sendCodeRes.state.error && (
-          <ErrorMessage message={sendCodeRes.state.error?.email} />
-        )}
+      <form className={styles.sendCode_form} onSubmit={sendCodeSubmit}>
+        <InputField ref={emailRef} label={"Email"} name={"email"} />
 
-        {sendCode && (
-          <>
-            <div className={styles.code}>
-              <InputField label="Code" name="code" maxLength={6} />
-
-              <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
-            </div>
-            <Button
-              formAction={verifyCodeRes.formAction}
-              color="blue"
-              fullWidth
-              disabled={timeOver}
-            >
-              Verification Code
-            </Button>
-          </>
-        )}
-
-        <Button
-          color="blue"
-          fullWidth
-          formAction={sendCodeRes.formAction}
-          disabled={sendCodeRes.isError || sendCodeRes.formStatus.pending}
-        >
+        <Button color="blue" fullWidth disabled={isSend && status.isSuccess}>
           Send Code
         </Button>
       </form>
 
+      {sendCode && (
+        <form onSubmit={verifyCodeSubmit}>
+          <div className={styles.code}>
+            <InputField label="Code" name="code" maxLength={6} />
+
+            <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
+          </div>
+          <Button type="submit" color="blue" fullWidth disabled={timeOver}>
+            Verification Code
+          </Button>
+        </form>
+      )}
+
       {/* send success modal & verification timer start */}
-      <AlertModal open={open} onCancel={handleTimerStart}>
+      <AlertModal open={isSend && status.isSuccess} onCancel={onResetState}>
         <p>sent to link, please check your email</p>
       </AlertModal>
 
       {/* send error modal */}
-      <AlertModal
-        open={!!sendCodeRes.isError}
-        onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
-      >
-        <p>{sendCodeRes.errorMessage}</p>
+      <AlertModal open={isSend && status.isError} onCancel={onResetState}>
+        <p>{status.message}</p>
       </AlertModal>
 
       {/* verification fail modal */}
-      <AlertModal
-        open={!!verifyCodeRes.isError}
+      {/* <AlertModal
+        open={verifyCodeAction.isError === true}
         onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
       >
-        <p>{verifyCodeRes.errorMessage}</p>
-      </AlertModal>
+        <p>{verifyCodeAction.errorMessage}</p>
+      </AlertModal> */}
     </main>
   );
 };

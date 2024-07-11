@@ -44,7 +44,7 @@ const menu: TSubMenuList[] = [
 export const Menu = ({}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const { handleOpen, open } = useModal();
+  const { handleOpenModal, open } = useModal();
 
   const renderMenuList = ({ title, list }: TMenuList) => {
     return (
@@ -56,7 +56,7 @@ export const Menu = ({}) => {
             const isHref = title === "Location" ? href : "#";
 
             return (
-              <Link key={menu} href={isHref} onClick={handleOpen}>
+              <Link key={menu} href={isHref} onClick={handleOpenModal}>
                 <Chip>{menu}</Chip>
               </Link>
             );
@@ -69,7 +69,7 @@ export const Menu = ({}) => {
   const renderSubMenu = ({ title, href }: TSubMenuList) => {
     return (
       <div className={styles.subMenu} key={title}>
-        <Link href={href} onClick={handleOpen}>
+        <Link href={href} onClick={handleOpenModal}>
           <nav className={styles.title}>{title}</nav>
         </Link>
       </div>
@@ -78,13 +78,16 @@ export const Menu = ({}) => {
 
   return (
     <div className={styles.menu}>
-      <MenuIcon onClick={handleOpen} />
+      <MenuIcon onClick={handleOpenModal} />
 
       <Portal>
-        <div ref={modalRef} className={clsx(styles.overlay, {
-          [styles.open] :open
-        })}>
-          <div className={styles.cancel} onClick={handleOpen}>
+        <div
+          ref={modalRef}
+          className={clsx(styles.overlay, {
+            [styles.open]: open,
+          })}
+        >
+          <div className={styles.cancel} onClick={handleOpenModal}>
             <CancelIcon />
           </div>
 

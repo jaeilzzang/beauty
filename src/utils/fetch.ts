@@ -16,7 +16,7 @@ export const fetchUtils = async <T>({
       throw new Error("API ERROR");
     }
 
-    const { data } = await res.json();
+    const data = await res.json();
 
     return data;
   } catch (error) {
