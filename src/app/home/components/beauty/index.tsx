@@ -4,6 +4,7 @@ import styles from "./Beauty.module.scss";
 import Link from "next/link";
 import ThumbnailImg from "@/components/molecules/img/thumbnail";
 import { getHospitalBeautyAPI } from "../../api/hospital";
+import { ROUTE } from "@/router";
 
 const Beauty = async () => {
   const getBeauty = await getHospitalBeautyAPI();
@@ -12,9 +13,11 @@ const Beauty = async () => {
 
   return (
     <div className={styles.article_wrapper}>
-      {getBeauty.data.map(({ id, imageurls, name }) => (
+      {getBeauty.data.map(({ id, imageurls, name, id_unique }) => (
         <article key={id}>
-          <Link href={"#"}>
+          <Link
+            href={{ pathname: ROUTE.HOSPITAL_DETAIL("id"), search: id_unique }}
+          >
             <ThumbnailImg src={imageurls[0]} alt={name} />
           </Link>
         </article>

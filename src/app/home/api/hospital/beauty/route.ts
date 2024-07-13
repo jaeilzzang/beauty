@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const { data } = await supabase
       .from("hospital")
-      .select("id, imageurls, name")
+      .select("id, imageurls, name, id_unique")
       .limit(6);
 
     return Response.json({ data }, { status: 200, statusText: "success" });
