@@ -36,7 +36,7 @@ const EmailVerificationPage = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const verifyCode = useRef<HTMLInputElement>(null);
 
-  const { setOpen, open, handleOpenModal } = useModal();
+  const { open, handleOpenModal } = useModal();
 
   const [timeOver, setTimeOver] = useState<boolean>(false);
   const [sendCode, setSendCode] = useState<boolean>(false);
@@ -52,6 +52,13 @@ const EmailVerificationPage = () => {
   const [status, setStatus] = useState<State>(initState);
 
   const onResetState = () => {
+    setStatus(initState);
+  };
+
+  const onSendCode = () => {
+    setSendCode(true);
+    setTimeOver(true);
+
     setStatus(initState);
   };
 
@@ -81,37 +88,53 @@ const EmailVerificationPage = () => {
         message: "Invalid Email",
         isError: true,
       }));
-
       return;
     }
 
     // fetching
-    console.log("fetching");
 
-    const res = await fetchUtils({
-      url: `http://localhost:3000/auth/email-verification/api/sendCode?email=${emailValue}`,
-    });
+    try {
+      setStatus((prev) => ({
+        ...prev,
+        isLoading: true,
+      }));
 
-    setStatus((prev) => ({
-      ...prev,
-      isSuccess: true,
-      isError: false,
-      isLoading: false,
-      message: "success",
-      type: "send",
-    }));
+      const url = `http://localhost:3000/auth/email-verification/api/sendCode?email=${emailValue}`;
+      const res = await fetchUtils({ url });
 
-    console.log(res);
+      setStatus((prev) => ({
+        ...prev,
+        isSuccess: true,
+        isError: false,
+        message: "success",
+        type: "send",
+      }));
+
+      console.log(res);
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus((prev) => ({
+          ...prev,
+          isSuccess: false,
+          isError: true,
+          isLoading: false,
+          message: error.message,
+        }));
+      }
+    } finally {
+      setStatus((prev) => ({ ...prev, type: "send", isLoading: false }));
+    }
   };
-
   const verifyCodeSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    setOpen(false);
+    handleOpenModal();
     setSendCode(true);
   };
 
-  console.log(open);
+  if (status.isLoading) return <div>...loading</div>;
+
+  console.log(status);
 
   return (
     <main className={clsx("container", styles.main)}>
@@ -139,7 +162,7 @@ const EmailVerificationPage = () => {
       )}
 
       {/* send success modal & verification timer start */}
-      <AlertModal open={isSend && status.isSuccess} onCancel={onResetState}>
+      <AlertModal open={isSend && status.isSuccess} onCancel={onSendCode}>
         <p>sent to link, please check your email</p>
       </AlertModal>
 

@@ -6,19 +6,20 @@ export async function GET(req: Request) {
 
   const supabase = createClient();
 
-  console.log(email);
-
   try {
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-    });
+    const { data, error } = await supabase.auth.signInWithOtp({ email });
 
     if (error) {
       throw Error(error.message);
     }
 
-    return Response.json({ data, success: true, error: "" });
+    return Response.json({ data }, { status: 200, statusText: "success" });
   } catch (error) {
-    return Response.json({ data: [], success: false, error: error });
+    if (error instanceof Error) {
+      return Response.json(
+        { success: true, error: "" },
+        { status: 500, statusText: error.message }
+      );
+    }
   }
 }

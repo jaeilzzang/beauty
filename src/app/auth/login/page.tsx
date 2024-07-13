@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 const LoginPage = () => {
   const router = useRouter();
   const signinAction = useFormAction({ action: signInActions });
+  console.log(signinAction);
 
   return (
     <main className={clsx("container", styles.main)}>

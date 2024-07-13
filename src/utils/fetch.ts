@@ -13,7 +13,7 @@ export const fetchUtils = async <T>({
     const res = await fetch(url, fetchOptions);
 
     if (!res.ok) {
-      throw new Error("API ERROR");
+      throw new Error(res.statusText);
     }
 
     const data = await res.json();

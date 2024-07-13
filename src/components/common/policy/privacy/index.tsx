@@ -11,7 +11,7 @@ import useModal from "@/hooks/useModal";
 const SignUpButton = () => {
   const router = useRouter();
 
-  const { handleOpen, open } = useModal();
+  const { handleOpenModal, open } = useModal();
 
   const handleConfirm = () => {
     router.push(ROUTE.EMAIL_VERIFICATION);
@@ -19,14 +19,14 @@ const SignUpButton = () => {
 
   return (
     <>
-      <Button variant="outline" color="blue" onClick={handleOpen}>
+      <Button variant="outline" color="blue" onClick={handleOpenModal}>
         SIGN UP
       </Button>
 
       <ConfirmModal
         open={open}
         title="title"
-        onCancel={handleOpen}
+        onCancel={handleOpenModal}
         onConfirm={handleConfirm}
       >
         줄바꿈 테스트
