@@ -4,7 +4,11 @@ import React from "react";
 import styles from "./hospitalDetail.module.scss";
 import HospitalTab from "./components/tab";
 
-const HospitalDetailPage = () => {
+const HospitalDetailPage = ({
+  searchParams,
+}: {
+  searchParams: { tab: string };
+}) => {
   return (
     <main>
       <div className={styles.thumbnail_box}>
@@ -12,7 +16,7 @@ const HospitalDetailPage = () => {
       </div>
 
       {/* tab */}
-      <HospitalTab />
+      <HospitalTab currentTab={searchParams.tab} />
     </main>
   );
 };

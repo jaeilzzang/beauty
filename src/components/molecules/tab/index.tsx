@@ -1,5 +1,3 @@
-"use client";
-
 import TabContent from "./content";
 import TabHeader from "./header";
 import { TabItem } from "./types";

@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "./tab-header.module.scss";
 
 import Link from "next/link";
@@ -20,7 +18,7 @@ const TabHeader = ({ list, currentTab }: TabHeaderProps) => {
     <>
       <ul className={styles.menu}>
         {list.map(({ key, name, href }) => (
-          <Link key={key} href={href}>
+          <Link key={key} href={href} scroll={false}>
             <li className={linkStyle(key)}>{name}</li>
           </Link>
         ))}
