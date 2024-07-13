@@ -1,0 +1,6 @@
+.article_wrapper {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  margin: 0 24px;
+}

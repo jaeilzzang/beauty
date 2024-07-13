@@ -41,13 +41,3 @@
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   margin: 0 24px;
 }
-
-.thumbnail_box {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1;
-
-  & > img {
-    border-radius: 8px;
-  }
-}

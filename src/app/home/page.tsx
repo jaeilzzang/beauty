@@ -8,9 +8,11 @@ import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
 import { getBannerAPI } from "./api/banner";
-import { getHospitalBeautyAPI, getHospitalLocationAPI } from "./api/hospital";
-import { NoData } from "@/components/template/noData";
-import ThumbnailImg from "@/components/molecules/img/thumbnail";
+
+import Beauty from "./components/beauty";
+import { Suspense } from "react";
+import LoadingSpinner from "@/components/atoms/loading/spinner";
+import LocationHospital from "./components/location";
 
 export default async function Home({
   searchParams,
@@ -18,37 +20,24 @@ export default async function Home({
   searchParams: { locationNum: string };
 }) {
   // const bannerItem = await getBannerAPI();
-  const getBeauty = await getHospitalBeautyAPI();
-  const getLocation = await getHospitalLocationAPI({
-    locationNum: searchParams?.locationNum,
-  });
-
-  console.log(getLocation);
 
   return (
     <main>
       <Banner bannerItem={[]} />
 
       <section className={styles.section}>
+        {/* Beauty */}
         <div className={styles.text_wrapper}>
           <h2 className={styles.title}>New Beauty</h2>
           <p>Make Attraction</p>
         </div>
 
-        {getBeauty.data.length ? (
-          <div className={styles.article_wrapper}>
-            {getBeauty.data.map(({ id, imageurls, name }) => (
-              <article key={id}>
-                <Link href={"#"}>
-                  <ThumbnailImg src={imageurls[0]} alt={name} />
-                </Link>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <NoData />
-        )}
+        <Suspense fallback={<LoadingSpinner />}>
+          <Beauty />
+        </Suspense>
       </section>
+
+      {/* LocationHospital */}
       <section className={styles.section}>
         <div className={styles.text_wrapper}>
           <h2 className={styles.title}>Hospitals</h2>
@@ -70,19 +59,9 @@ export default async function Home({
           ))}
         </div>
 
-        {getLocation.data.length ? (
-          <div className={styles.article_wrapper}>
-            {getLocation.data.map(({ id, imageurls, name }) => (
-              <article key={id}>
-                <Link href={ROUTE.HOSPITAL_DETAIL + id}>
-                  <ThumbnailImg src={imageurls[0]} alt={name} />
-                </Link>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <NoData />
-        )}
+        <Suspense fallback={<LoadingSpinner />}>
+          <LocationHospital locationNum={searchParams?.locationNum} />
+        </Suspense>
       </section>
     </main>
   );

@@ -13,7 +13,9 @@ interface ThumbnailImgProps {
   blurDataURL?: string;
 }
 
-const ThumbnailImg = ({ src, alt, blurDataURL }: ThumbnailImgProps) => {
+const ThumbnailImg = (props: ThumbnailImgProps) => {
+  const { src, alt, blurDataURL } = props;
+
   // 기본 이미지 경로
   // 변경이나 예외가 발생한다면 경로 문제일수도 있으니
   // public 폴더가 기본 경로기 때문에 / hospitalimg / ~는 사실 public / hospitalimg~ 이니까 참고해서 사용하시면 됩니다.
