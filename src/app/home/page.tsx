@@ -10,6 +10,7 @@ import { ROUTE } from "@/router";
 import { getBannerAPI } from "./api/banner";
 import { getHospitalBeautyAPI, getHospitalLocationAPI } from "./api/hospital";
 import { NoData } from "@/components/template/noData";
+import ThumbnailImg from "@/components/molecules/img/thumbnail";
 
 export default async function Home({
   searchParams,
@@ -22,6 +23,8 @@ export default async function Home({
     locationNum: searchParams?.locationNum,
   });
 
+  console.log(getLocation);
+
   return (
     <main>
       <Banner bannerItem={[]} />
@@ -32,20 +35,12 @@ export default async function Home({
           <p>Make Attraction</p>
         </div>
 
-        {getBeauty.length ? (
+        {getBeauty.data.length ? (
           <div className={styles.article_wrapper}>
-            {getBeauty.map(({ id, imageurls, name }) => (
+            {getBeauty.data.map(({ id, imageurls, name }) => (
               <article key={id}>
                 <Link href={"#"}>
-                  <div className={styles.thumbnail_box}>
-                    <Image
-                      fill
-                      src={imageurls[0]}
-                      alt={name}
-                      placeholder="blur"
-                      blurDataURL="/hospitalimg/hospital_default.png"
-                    />
-                  </div>
+                  <ThumbnailImg src={imageurls[0]} alt={name} />
                 </Link>
               </article>
             ))}
@@ -80,15 +75,7 @@ export default async function Home({
             {getLocation.data.map(({ id, imageurls, name }) => (
               <article key={id}>
                 <Link href={ROUTE.HOSPITAL_DETAIL + id}>
-                  <div className={styles.thumbnail_box}>
-                    <Image
-                      fill
-                      src={imageurls[0]}
-                      alt={name}
-                      placeholder="blur"
-                      blurDataURL="/hospitalimg/hospital_default.png"
-                    />
-                  </div>
+                  <ThumbnailImg src={imageurls[0]} alt={name} />
                 </Link>
               </article>
             ))}
