@@ -23,7 +23,7 @@ const SignUpPage = () => {
   const { errorMessage, formAction, formStatus, isError, state } =
     useFormAction({ action: signUpActions });
 
-  const { handleOpen, open } = useModal();
+  const { handleOpenModal, open } = useModal();
 
   const [nationality, setNationality] = useState<string>("");
 
@@ -41,8 +41,8 @@ const SignUpPage = () => {
       name: "nationality",
       readOnly: true,
       value: nationality,
-      onClick: handleOpen,
-      onFocus: handleOpen,
+      onClick: handleOpenModal,
+      onFocus: handleOpenModal,
     },
   ];
 
@@ -83,7 +83,7 @@ const SignUpPage = () => {
       </form>
 
       <SearchModal
-        onCancel={handleOpen}
+        onCancel={handleOpenModal}
         onClick={(value) => setNationality(value)}
         itemList={Array(100).fill("KOREA")}
         open={open}

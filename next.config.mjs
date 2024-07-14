@@ -25,6 +25,17 @@ const nextConfig = {
         destination: "/home",
         permanent: true,
       },
+      {
+        source: "/hospital/:id",
+        missing: [
+          {
+            type: "query",
+            key: "tab",
+          },
+        ],
+        destination: "/hospital/:id?tab=info",
+        permanent: true,
+      },
     ];
   },
 };

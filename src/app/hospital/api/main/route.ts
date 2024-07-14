@@ -4,27 +4,28 @@ export async function GET(req: Request) {
   const supabase = createClient();
 
   const { searchParams } = new URL(req.url);
-  const id_hospital = searchParams.get("id");
+  const id_unique = searchParams.get("id");
 
   try {
     const { data, error } = await supabase
-      .from("hospital_details")
+      .from("hospital")
       .select(
-        `kakaotalk,
-         facebook,
-         instagram,
-         blog,
-         youtube,
-         ticktok,
-         snapchat,
-         etc,
-         tel,
-         homepage,
-         hospital (
-            imageurls
-        )`
+        `imageurls,
+         name,
+         hospital_details (
+            tel,
+            homepage,
+            kakaotalk,
+            facebook,
+            instagram,
+            blog,
+            youtube,
+            ticktok,
+            snapchat
+        )
+        `
       )
-      .match({ id_hospital });
+      .match({ id_unique });
 
     if (error) {
       return Response.json(

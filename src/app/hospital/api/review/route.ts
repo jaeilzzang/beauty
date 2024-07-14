@@ -6,12 +6,6 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const id_hospital = searchParams.get("id");
 
-  console.log(
-    id_hospital,
-    searchParams,
-    "searchParamssearchParamssearchParamssearchParams"
-  );
-
   try {
     const { data, error } = await supabase
       .from("hospital_details")

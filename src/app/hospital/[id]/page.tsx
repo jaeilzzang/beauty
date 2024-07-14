@@ -5,7 +5,8 @@ import styles from "./hospitalDetail.module.scss";
 import HospitalTab from "./components/tab";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
 import { getHospitalMainAPI } from "../api/main";
-import Floating from "./components/floating";
+import Floating, { FloatItem } from "./components/floating";
+import { redirect } from "next/navigation";
 
 interface HospitalDetailPageProps {
   params: { id: string };
@@ -16,28 +17,25 @@ const HospitalDetailPage = async ({
   params,
   searchParams,
 }: HospitalDetailPageProps) => {
-  const { data } = await getHospitalMainAPI({ id: params.id });
-  console.log(data, "data");
+  if (params.id === "undefined") redirect("/");
 
-  const getFloatList = Object.entries(data[0]).reduce(
-    (acc, [key, value]) => {
-      if (typeof value === "string" && Boolean(value)) {
-        console.log(key, value);
-        acc.push({ name: key, href: value });
-      }
+  const { data } = await getHospitalMainAPI({ id: params?.id });
 
-      return acc;
-    },
-    [{ name: "", href: "" }]
-  );
+  const getFloatList = Object.entries(data[0].hospital_details).reduce<
+    FloatItem[]
+  >((acc, [key, value]) => {
+    if (typeof value === "string" && Boolean(value)) {
+      acc.push({ name: key, href: value });
+    }
 
-  console.log(getFloatList, "getFloatList");
+    return acc;
+  }, []);
 
   return (
     <main className={styles.main}>
       {/* <ThumbnailImg src={data[0].hospital.imageurls[0]} alt="thumbnail" /> */}
       <div className={styles.thumbnail_box}>
-        <Image fill src={data[0].hospital.imageurls[0]} alt="h1" />
+        <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
       </div>
 
       {/* tab */}

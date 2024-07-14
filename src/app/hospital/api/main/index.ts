@@ -9,7 +9,10 @@ export const getHospitalMainAPI = async ({
 }: HospitalDetailMainInputDto): Promise<HospitalDetailMainOutput> => {
   const url = `http://localhost:3000/hospital/api/main?id=${id}`;
 
-  const data = await fetchUtils<HospitalDetailMainOutput>({ url });
+  const data = await fetchUtils<HospitalDetailMainOutput>({
+    url,
+    fetchOptions: { cache: "no-cache" },
+  });
 
   return data ?? [];
 };

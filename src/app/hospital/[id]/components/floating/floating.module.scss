@@ -1,0 +1,9 @@
+.floating {
+  position: fixed;
+
+  right: 5%;
+  display: flex;
+
+  flex-direction: column;
+  gap: 0.5rem;
+}

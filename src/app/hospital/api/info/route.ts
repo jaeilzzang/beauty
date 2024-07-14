@@ -4,21 +4,25 @@ export async function GET(req: Request) {
   const supabase = createClient();
 
   const { searchParams } = new URL(req.url);
-  const id_hospital = searchParams.get("id");
-
-  console.log(
-    id_hospital,
-    searchParams,
-    "searchParamssearchParamssearchParamssearchParams"
-  );
+  const id_unique = searchParams.get("id");
 
   try {
     const { data, error } = await supabase
-      .from("hospital_details")
+      .from("hospital")
       .select(
-        "map, tel, desc_address, desc_openninghour, desc_facilities, desc_doctors_imgurls, id_hospital, etc"
+        `id_unique, name, latitude, longitude,
+          hospital_details (
+          map,
+          desc_address,
+          desc_openninghour,
+          desc_facilities,
+          desc_doctors_imgurls,
+          id_hospital,
+          etc
+        )
+        `
       )
-      .match({ id_hospital });
+      .match({ id_unique });
 
     if (error) {
       return Response.json(
