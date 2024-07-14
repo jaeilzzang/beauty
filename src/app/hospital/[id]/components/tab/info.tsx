@@ -1,8 +1,17 @@
-import styles from "../styles/info.module.scss";
+import { getHospitalInfoAPI } from "@/app/hospital/api/info";
+import styles from "./styles/info.module.scss";
 
 type TContent = { title: string; content: string };
 
-const InfoTab = () => {
+interface InfoTabProps {
+  id: string;
+}
+
+const InfoTab = async ({ id }: InfoTabProps) => {
+  const data = await getHospitalInfoAPI({ id });
+
+  console.log(data, "info");
+
   const renderContent = ({ title, content }: TContent) => {
     return (
       <div className={styles.content_wrapper}>

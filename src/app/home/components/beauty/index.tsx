@@ -15,9 +15,7 @@ const Beauty = async () => {
     <div className={styles.article_wrapper}>
       {getBeauty.data.map(({ id, imageurls, name, id_unique }) => (
         <article key={id}>
-          <Link
-            href={{ pathname: ROUTE.HOSPITAL_DETAIL("id"), search: id_unique }}
-          >
+          <Link href={ROUTE.HOSPITAL_DETAIL("") + id_unique}>
             <ThumbnailImg src={imageurls[0]} alt={name} />
           </Link>
         </article>

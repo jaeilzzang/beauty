@@ -3,6 +3,7 @@ import Image from "next/image";
 // import styles from "../styles/review.module.scss";
 
 import { ReviewCard } from "@/components/molecules/card";
+import { getHospitalReviewAPI } from "@/app/hospital/api/review";
 
 const testContent = `이벤트 초과하는건 밑줄로 표현하기이벤트 초과하는건 밑줄로 표현하기
           이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
@@ -16,7 +17,15 @@ const testContent = `이벤트 초과하는건 밑줄로 표현하기이벤트 �
           이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
           이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기`;
 
-const ReviewTab = () => {
+interface ReviewTabProps {
+  id: string;
+}
+
+const ReviewTab = async ({ id }: ReviewTabProps) => {
+  const data = await getHospitalReviewAPI({ id });
+
+  console.log(data, "event");
+
   return (
     <>
       <ReviewCard

@@ -1,7 +1,3 @@
-import { useSearchParams } from "next/navigation";
-
-// import styles from "../styles/tab.module.scss";
-
 import { tabList } from "./constants";
 
 import TabComponent from "@/components/molecules/tab";
@@ -12,14 +8,14 @@ import ReviewTab from "./review";
 
 interface HospitalTabProps {
   currentTab: string;
+  id: string;
 }
 
-const HospitalTab = ({ currentTab }: HospitalTabProps) => {
-  console.log(currentTab);
+const HospitalTab = ({ currentTab, id }: HospitalTabProps) => {
   const Component: Record<string, JSX.Element> = {
-    info: <InfoTab />,
-    event: <EventTab />,
-    review: <ReviewTab />,
+    info: <InfoTab id={id} />,
+    event: <EventTab id={id} />,
+    review: <ReviewTab id={id} />,
   };
 
   return (
