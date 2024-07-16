@@ -32,20 +32,33 @@ const HospitalDetailPage = async ({
   }, []);
 
   return (
-    <main className={styles.main}>
-      {/* <ThumbnailImg src={data[0].hospital.imageurls[0]} alt="thumbnail" /> */}
-      <div className={styles.thumbnail_box}>
-        <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
+    <>
+      <div className={styles.header}>
+        <div>{data[0].name}</div>
+
+        <Image
+          className={styles.favorite}
+          src="/icons/icon_favorite_disable.svg"
+          alt="favorite"
+          width={24}
+          height={24}
+        />
       </div>
+      <main className={styles.main}>
+        {/* <ThumbnailImg src={data[0].hospital.imageurls[0]} alt="thumbnail" /> */}
+        <div className={styles.thumbnail_box}>
+          <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
+        </div>
 
-      {/* tab */}
-      <Suspense fallback={<LoadingSpinner />}>
-        <HospitalTab currentTab={searchParams.tab} id={params.id} />
-      </Suspense>
+        {/* tab */}
+        <Suspense fallback={<LoadingSpinner />}>
+          <HospitalTab currentTab={searchParams.tab} id={params.id} />
+        </Suspense>
 
-      {/* floating */}
-      <Floating float={getFloatList} />
-    </main>
+        {/* floating */}
+        <Floating float={getFloatList} />
+      </main>
+    </>
   );
 };
 

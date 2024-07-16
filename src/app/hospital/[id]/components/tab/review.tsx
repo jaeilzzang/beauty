@@ -1,96 +1,27 @@
-import Image from "next/image";
-
-// import styles from "../styles/review.module.scss";
-
 import { ReviewCard } from "@/components/molecules/card";
 import { getHospitalReviewAPI } from "@/app/hospital/api/review";
-
-const testContent = `이벤트 초과하는건 밑줄로 표현하기이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기`;
 
 interface ReviewTabProps {
   id: string;
 }
 
 const ReviewTab = async ({ id }: ReviewTabProps) => {
-  const data = await getHospitalReviewAPI({ id });
+  const { data, count } = await getHospitalReviewAPI({ id });
 
-  console.log(data, "event");
+  // console.log(data, "event");
 
   return (
     <>
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
-      <ReviewCard
-        src={"/img/thumbnail.jpeg"}
-        alt="thumbnail"
-        content={testContent}
-        id="id"
-        name="name"
-      />
+      {data.map((e) => (
+        <ReviewCard
+          key={e.id_unique}
+          src={e.reviewimageurls[0]}
+          alt="thumbnail"
+          content={e.description}
+          id={e.user?.nickname || ""}
+          name={e.hospital.name}
+        />
+      ))}
     </>
   );
 };

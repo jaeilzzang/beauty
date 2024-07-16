@@ -1,6 +1,6 @@
 import React from "react";
 
-// import styles from "../styles/event.module.scss";
+import styles from "../tab/styles/event.module.scss";
 import { EventCard } from "@/components/molecules/card";
 import { ROUTE } from "@/router";
 import { getHospitalEventAPI } from "@/app/hospital/api/event";
@@ -9,90 +9,28 @@ interface EventTabProps {
   id: string;
 }
 
-const descTest = `이벤트 초과하는건 밑줄로 표현하기이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기
-          이벤트 초과하는건 밑줄로 표현하기 이벤트 초과하는건 밑줄로 표현하기`;
-
 const EventTab = async ({ id }: EventTabProps) => {
-  const data = await getHospitalEventAPI({ id });
-
-  console.log(data, "event");
+  const { data } = await getHospitalEventAPI({ id });
 
   return (
-    <>
-      <EventCard
-        href={ROUTE.EVENT_DETAIL("") + 1}
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-      <EventCard
-        href="/event/1"
-        src="/img/thumbnail.jpeg"
-        alt="thumbnail"
-        date="date"
-        desc={descTest}
-        title="예쁘니까 울랄라"
-      />
-    </>
+    <div className={styles.grid}>
+      {data.map((e) => {
+        const fromDate = new Date(e.date_from).toISOString();
+        const toDate = new Date(e.date_to).toISOString();
+
+        return (
+          <EventCard
+            key={e.id_unique}
+            href={ROUTE.EVENT_DETAIL("") + e.id}
+            src={e.imageurls[0]}
+            title={e.name}
+            date={`${fromDate}${toDate}`}
+            desc={e.description}
+            alt={e.name}
+          />
+        );
+      })}
+    </div>
   );
 };
 

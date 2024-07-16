@@ -7,18 +7,14 @@ export async function GET(req: Request) {
   const id_hospital = searchParams.get("id");
 
   try {
-    const { data, error } = await supabase
-      .from("hospital_details")
-      .select(
-        "map, tel, desc_address, desc_openninghour, desc_facilities, desc_doctors_imgurls, id_hospital, etc"
-      )
-      .match({ id_hospital });
+    const { data, count, error, status, statusText } = await supabase
+      .from("reviews")
+      .select("*, hospital ( name ), user ( nickname )", { count: "exact" })
+      .match({ id_hospital })
+      .order("created_at", { ascending: true });
 
     if (error) {
-      return Response.json(
-        { data: null },
-        { status: 500, statusText: error.message }
-      );
+      return Response.json({ data, count }, { status, statusText });
     }
 
     return Response.json({ data }, { status: 200, statusText: "success" });

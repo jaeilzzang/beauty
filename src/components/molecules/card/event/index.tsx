@@ -24,14 +24,16 @@ export const EventCard = ({
 }: EventCardProps) => {
   return (
     <article className={styles.event}>
-      <Link href={href}>
+      <Link className={styles.grid} href={href}>
         <div className={styles.thumbnail}>
           <Image fill src={src} alt={alt} />
         </div>
 
         <div className={styles.content}>
-          <p className={styles.name}>{title}</p>
-          <p className={styles.date}>{date}</p>
+          <div className={styles.title}>
+            <p className={styles.name}>{title}</p>
+            <p className={styles.date}>{date}</p>
+          </div>
           <p className={styles.desc}>{desc}</p>
         </div>
       </Link>

@@ -4,6 +4,24 @@
   padding: 0 24px;
 }
 
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 1rem;
+
+  background-color: $blue;
+
+  padding: 12px 24px;
+  color: #fff;
+}
+
+.favorite {
+  position: absolute;
+  right: 1rem;
+}
+
 .thumbnail_box {
   position: relative;
   width: 100%;

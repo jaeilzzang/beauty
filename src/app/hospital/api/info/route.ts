@@ -7,11 +7,11 @@ export async function GET(req: Request) {
   const id_unique = searchParams.get("id");
 
   try {
-    const { data, error } = await supabase
+    const { data, error, status, statusText } = await supabase
       .from("hospital")
       .select(
         `id_unique, name, latitude, longitude,
-          hospital_details (
+          hospital_details: hospital_details!hospital_id_unique_fkey (
           map,
           desc_address,
           desc_openninghour,
@@ -25,10 +25,7 @@ export async function GET(req: Request) {
       .match({ id_unique });
 
     if (error) {
-      return Response.json(
-        { data: null },
-        { status: 500, statusText: error.message }
-      );
+      return Response.json({ data: null }, { status, statusText });
     }
 
     return Response.json({ data }, { status: 200, statusText: "success" });
