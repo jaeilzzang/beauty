@@ -13,7 +13,7 @@ export const VerifyCodeMutationFn = async ({
   });
 
   const res = await fetchUtils<Response>({
-    url: `http://localhost:3000/api/auth/email-verification/verifyCode`,
+    url: `http://localhost:3000/api/auth/verifyCode`,
     fetchOptions: {
       method: "POST",
       body,

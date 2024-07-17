@@ -11,6 +11,8 @@ export async function GET(req: Request) {
       email,
     });
 
+    console.log(error, data, "sendcode");
+
     if (error) {
       return Response.json(
         { data },

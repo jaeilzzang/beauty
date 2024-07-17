@@ -19,11 +19,31 @@ import { useMutation } from "@tanstack/react-query";
 import { sendCodeMutationFn } from "../../api/auth/sendCode";
 import { VerifyCodeMutationFn } from "../../api/auth/verifyCode";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
-import useModal from "@/hooks/useModal";
+
+type State = {
+  open: boolean;
+  content: JSX.Element;
+  onClick: () => void;
+};
 
 const EmailVerificationPage = () => {
   const router = useRouter();
-  const { open, handleOpenModal } = useModal();
+
+  // const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<State>({
+    open: false,
+    content: <></>,
+    onClick: () => {},
+  });
+
+  const handleModalClose = () => {
+    setModalContent((prev) => ({
+      ...prev,
+      content: <></>,
+      onClick: () => {},
+      open: false,
+    }));
+  };
 
   const emailRef = useRef<HTMLInputElement>(null);
   const verifyCodeRef = useRef<HTMLInputElement>(null);
@@ -39,22 +59,53 @@ const EmailVerificationPage = () => {
 
   const sendCodeMutation = useMutation({
     mutationFn: sendCodeMutationFn,
-  });
-  const verifyCodeMutation = useMutation({
-    mutationFn: VerifyCodeMutationFn,
+    onSuccess: () => {
+      setModalContent((prev) => ({
+        ...prev,
+        open: true,
+        content: <p>Code sent to your email. Please check your email.</p>,
+        onClick: () => setStartTimer(true),
+      }));
+    },
     onError(error) {
-      if (error && verifyCodeRef.current) {
-        verifyCodeRef.current.value = "";
-      }
+      setModalContent((prev) => ({
+        ...prev,
+        open: true,
+        content: <p>{error.message}</p>,
+        onClick: () => sendCodeMutation.reset(),
+      }));
     },
   });
 
-  // console.log(sendCodeMutation, "send");
-  // console.log(verifyCodeMutation, "veri");
+  const verifyCodeMutation = useMutation({
+    mutationFn: VerifyCodeMutationFn,
+    onSuccess: () => {
+      setModalContent((prev) => ({
+        ...prev,
+        open: true,
+        content: <p>Verification successful</p>,
+        onClick: () => router.push(ROUTE.SIGN_UP),
+      }));
+    },
+    onError(error) {
+      setModalContent((prev) => ({
+        ...prev,
+        open: true,
+        content: <p>{error.message}</p>,
+        onClick: () => {
+          verifyCodeMutation.reset();
 
-  const handleSendCodeStart = () => {
-    setStartTimer(true);
-  };
+          if (error && verifyCodeRef.current) {
+            verifyCodeRef.current.value = "";
+            verifyCodeRef.current.focus();
+          }
+        },
+      }));
+    },
+  });
+
+  console.log(sendCodeMutation, "send");
+  console.log(verifyCodeMutation, "veri");
 
   const sendCodeSubmit: FormEventHandler = (e) => {
     e.preventDefault();
@@ -64,7 +115,12 @@ const EmailVerificationPage = () => {
     const emailValue = emailRef.current.value;
 
     if (!emailRegExp.test(emailValue)) {
-      handleOpenModal();
+      setModalContent((prev) => ({
+        ...prev,
+        open: true,
+        content: <p>Invalid Email</p>,
+        onClick: handleModalClose,
+      }));
       return;
     }
 
@@ -88,15 +144,17 @@ const EmailVerificationPage = () => {
 
   const sendCodeDisabled = startTimer || sendCodeMutation.isPending;
 
-  useEffect(() => {
-    if (open) {
-      handleStopTimer();
-    }
-  }, [open]);
+  // useEffect(() => {
+  //   if (open) {
+  //     handleStopTimer();
+  //   }
+  // }, [open]);
+
+  console.log(modalContent);
 
   return (
     <main className={clsx("container", styles.main)}>
-      {isLoading && <LoadingSpinner />}
+      {isLoading && <LoadingSpinner backdrop />}
       <h1 className={styles.title}>Email Verification</h1>
 
       <form className={styles.sendCode_form} onSubmit={sendCodeSubmit}>
@@ -130,47 +188,15 @@ const EmailVerificationPage = () => {
         </form>
       )}
 
-      {open && (
-        <>
-          {/* validation error modal */}
-          <AlertModal open onCancel={handleOpenModal}>
-            <p>Invalid Email</p>
-          </AlertModal>
-        </>
-      )}
-
       <>
-        {/* send success modal & verification timer start */}
         <AlertModal
-          open={sendCodeMutation.isSuccess}
-          onCancel={handleSendCodeStart}
+          open={modalContent.open}
+          onCancel={() => {
+            modalContent.onClick();
+            handleModalClose();
+          }}
         >
-          <p>Code sent to your email. Please check your email.</p>
-        </AlertModal>
-
-        {/* send error modal */}
-        <AlertModal
-          open={sendCodeMutation.isError}
-          onCancel={() => sendCodeMutation.reset()}
-        >
-          <p>{sendCodeMutation.error?.message}</p>
-        </AlertModal>
-      </>
-
-      <>
-        {/* verification success modal */}
-        <AlertModal
-          open={verifyCodeMutation.isSuccess}
-          onCancel={() => router.push(ROUTE.SIGN_UP)}
-        >
-          <p>Verification successful</p>
-        </AlertModal>
-        {/* verification error modal */}
-        <AlertModal
-          open={verifyCodeMutation.isError}
-          onCancel={() => verifyCodeMutation.reset()}
-        >
-          <p>{verifyCodeMutation.error?.message}</p>
+          {modalContent.content}
         </AlertModal>
       </>
     </main>

@@ -10,9 +10,10 @@ import { ROUTE } from "@/router";
 import { getBannerAPI } from "@/app/api/home/banner";
 
 import Beauty from "./components/beauty";
+
+import LocationHospital from "./components/location";
 import { Suspense } from "react";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
-import LocationHospital from "./components/location";
 
 export default async function Home({
   searchParams,
@@ -20,6 +21,21 @@ export default async function Home({
   searchParams: { locationNum: string };
 }) {
   // const bannerItem = await getBannerAPI();
+
+  const renderLocalChip = () => {
+    return (
+      <div className={styles.location_wrapper}>
+        {location.map((name, i) => (
+          <Link key={name} href={ROUTE.LOCATION_DETAIL("") + i} scroll={false}>
+            <Chip>{name}</Chip>
+          </Link>
+        ))}
+        <Link href={ROUTE.LOCATION_DETAIL("")} scroll={false}>
+          <Chip>{"See All"}</Chip>
+        </Link>
+      </div>
+    );
+  };
 
   return (
     <main>
@@ -31,10 +47,7 @@ export default async function Home({
           <h2 className={styles.title}>New Beauty</h2>
           <p>Make Attraction</p>
         </div>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <Beauty />
-        </Suspense>
+        <Beauty />
       </section>
 
       {/* LocationHospital */}
@@ -43,22 +56,8 @@ export default async function Home({
           <h2 className={styles.title}>Hospitals</h2>
           <p>Choose the region u want</p>
         </div>
-
-        <div className={styles.location_wrapper}>
-          {location.map((name, i) => (
-            <Link
-              key={name}
-              href={ROUTE.LOCATION_DETAIL("") + i}
-              scroll={false}
-            >
-              <Chip>{name}</Chip>
-            </Link>
-          ))}
-        </div>
-
-        <Suspense fallback={<LoadingSpinner />}>
-          <LocationHospital locationNum={searchParams?.locationNum} />
-        </Suspense>
+        {renderLocalChip()}
+        <LocationHospital locationNum={searchParams?.locationNum} />
       </section>
     </main>
   );

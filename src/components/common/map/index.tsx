@@ -5,7 +5,7 @@ import { useRef } from "react";
 import styles from "./map.module.scss";
 import { createNonce } from "@/utils/security";
 
-type TCoordinatesType = {
+export type TCoordinatesType = {
   title?: string;
   lat: number;
   lng: number;

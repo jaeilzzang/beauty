@@ -9,9 +9,9 @@ const LocationHospital = async ({ locationNum }: { locationNum: string }) => {
 
   return (
     <div className={styles.article_wrapper}>
-      {data.map(({ id, imageurls, name }) => (
+      {data.map(({ id, imageurls, name, id_unique }) => (
         <article key={id}>
-          <Link href={ROUTE.LOCATION_DETAIL("") + id}>
+          <Link href={ROUTE.HOSPITAL_DETAIL("") + id_unique}>
             <ThumbnailImg src={imageurls[0]} alt={name} />
           </Link>
         </article>

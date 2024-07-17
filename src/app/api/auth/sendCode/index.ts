@@ -6,9 +6,10 @@ export const sendCodeMutationFn = async ({
   email: string;
 }): Promise<any> => {
   const res = await fetchUtils<Response>({
-    url: `http://localhost:3000/api/auth/email-verification/sendCode?email=${email}`,
+    url: `http://localhost:3000/api/auth/sendCode?email=${email}`,
   });
 
+  console.log(res);
   if (!res.ok) {
     // 보여주고 싶은 error message 매핑해서 사용할것
     // https://supabase.com/docs/reference/javascript/auth-error-codes
