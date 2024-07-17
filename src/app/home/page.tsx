@@ -1,5 +1,5 @@
 import { Banner } from "@/components/organism/layout/banner";
-import Image from "next/image";
+
 import Link from "next/link";
 
 import styles from "./home.module.scss";
@@ -7,7 +7,7 @@ import styles from "./home.module.scss";
 import { Chip } from "@/components/atoms/chip";
 import { location } from "@/constants";
 import { ROUTE } from "@/router";
-import { getBannerAPI } from "./api/banner";
+import { getBannerAPI } from "@/app/api/home/banner";
 
 import Beauty from "./components/beauty";
 import { Suspense } from "react";
@@ -48,10 +48,7 @@ export default async function Home({
           {location.map((name, i) => (
             <Link
               key={name}
-              href={{
-                pathname: ROUTE.HOME,
-                query: { locationNum: i },
-              }}
+              href={ROUTE.LOCATION_DETAIL("") + i}
               scroll={false}
             >
               <Chip>{name}</Chip>

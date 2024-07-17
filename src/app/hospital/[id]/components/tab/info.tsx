@@ -1,6 +1,7 @@
-import { getHospitalInfoAPI } from "@/app/hospital/api/info";
+import { getHospitalInfoAPI } from "@/app/api/hospital/[id]/info";
 import styles from "./styles/info.module.scss";
 import * as React from "react";
+import { Map } from "../../../../../components/common/map";
 
 type TContent = { title: string; content: string };
 
@@ -59,11 +60,15 @@ const InfoTab = async ({ id }: InfoTabProps) => {
         );
       })}
 
-      <div>
-        {/* {infoData.longitude}
-        {infoData.latitude} */}
-        google map
-      </div>
+      <Map
+        coordinates={[
+          {
+            title: infoData.name,
+            lat: infoData.latitude,
+            lng: infoData.longitude,
+          },
+        ]}
+      />
     </>
   );
 };

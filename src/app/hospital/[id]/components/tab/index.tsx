@@ -2,9 +2,18 @@ import { tabList } from "./constants";
 
 import TabComponent from "@/components/molecules/tab";
 
-import InfoTab from "./info";
-import EventTab from "./event";
-import ReviewTab from "./review";
+import LoadingSpinner from "@/components/atoms/loading/spinner";
+import dynamic from "next/dynamic";
+
+const InfoTab = dynamic(() => import("./info"), {
+  loading: () => <LoadingSpinner />,
+});
+const EventTab = dynamic(() => import("./event"), {
+  loading: () => <LoadingSpinner />,
+});
+const ReviewTab = dynamic(() => import("./review"), {
+  loading: () => <LoadingSpinner />,
+});
 
 interface HospitalTabProps {
   currentTab: string;

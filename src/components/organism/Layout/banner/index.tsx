@@ -17,7 +17,7 @@ import styles from "./banner.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { ROUTE } from "@/router";
-import { BannerOutputDto } from "@/app/home/api/banner/banner.dto";
+import { BannerOutputDto } from "@/app/api/home/banner/banner.dto";
 
 interface BannerProps {
   bannerItem: BannerOutputDto[];

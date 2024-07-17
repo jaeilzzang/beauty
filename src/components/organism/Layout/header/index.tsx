@@ -2,9 +2,9 @@ import styles from "./header.module.scss";
 
 import { Menu } from "../sidebar/menu";
 
-import PageName from "@/components/molecules/page-name";
 import Auth from "@/components/molecules/auth";
-import Link from "next/link";
+
+import Logo from "@/components/molecules/logo";
 
 export const Header = () => {
   return (
@@ -12,9 +12,7 @@ export const Header = () => {
       <div className={styles.wrapper}>
         <Menu />
 
-        <Link href={"/"}>home</Link>
-
-        <PageName />
+        <Logo />
 
         <Auth />
       </div>

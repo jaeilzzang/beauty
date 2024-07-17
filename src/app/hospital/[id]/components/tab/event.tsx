@@ -3,7 +3,7 @@ import React from "react";
 import styles from "../tab/styles/event.module.scss";
 import { EventCard } from "@/components/molecules/card";
 import { ROUTE } from "@/router";
-import { getHospitalEventAPI } from "@/app/hospital/api/event";
+import { getHospitalEventAPI } from "@/app/api/hospital/[id]/event";
 
 interface EventTabProps {
   id: string;

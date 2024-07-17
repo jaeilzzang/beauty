@@ -1,5 +1,5 @@
 import { ReviewCard } from "@/components/molecules/card";
-import { getHospitalReviewAPI } from "@/app/hospital/api/review";
+import { getHospitalReviewAPI } from "@/app/api/hospital/[id]/review";
 
 interface ReviewTabProps {
   id: string;

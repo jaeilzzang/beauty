@@ -6,75 +6,57 @@ import InputField from "@/components/molecules/form/input-field";
 import styles from "./email-verification.module.scss";
 import { clsx } from "clsx";
 
-import { sendCodeActions } from "./actions";
-
 import { AlertModal } from "@/components/template/modal/alert";
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
-import { ErrorMessage } from "@/components/atoms/message/error";
 
 import useTimer from "@/hooks/useTimer";
 import { FormEventHandler, useEffect, useRef, useState } from "react";
-import { verifyCodeActions } from "./actions/verifyCodeActions";
-import useModal from "@/hooks/useModal";
 
-import { useFormAction } from "@/hooks/useFormAction";
 import { emailRegExp } from "@/utils/regexp";
-import { fetchUtils } from "@/utils/fetch";
 
-export type State = {
-  type: "send" | "verify" | null;
-  isLoading: boolean;
-  isError: boolean;
-  isSuccess: boolean;
-  message: string;
-};
+import { useMutation } from "@tanstack/react-query";
+import { sendCodeMutationFn } from "../../api/auth/sendCode";
+import { VerifyCodeMutationFn } from "../../api/auth/verifyCode";
+import LoadingSpinner from "@/components/atoms/loading/spinner";
+import useModal from "@/hooks/useModal";
 
 const EmailVerificationPage = () => {
   const router = useRouter();
-
-  const emailRef = useRef<HTMLInputElement>(null);
-  const verifyCode = useRef<HTMLInputElement>(null);
-
   const { open, handleOpenModal } = useModal();
 
+  const emailRef = useRef<HTMLInputElement>(null);
+  const verifyCodeRef = useRef<HTMLInputElement>(null);
+
   const [timeOver, setTimeOver] = useState<boolean>(false);
-  const [sendCode, setSendCode] = useState<boolean>(false);
 
-  const initState: State = {
-    type: null,
-    isLoading: false,
-    isError: false,
-    isSuccess: false,
-    message: "",
-  };
+  const { minute, second, setStartTimer, startTimer, handleStopTimer } =
+    useTimer({
+      time: 60,
+      timeOver,
+      setTimeOver,
+    });
 
-  const [status, setStatus] = useState<State>(initState);
-
-  const onResetState = () => {
-    setStatus(initState);
-  };
-
-  const onSendCode = () => {
-    setSendCode(true);
-    setTimeOver(true);
-
-    setStatus(initState);
-  };
-
-  const isSend = status.type === "send";
-  const isVerify = status.type === "verify";
-
-  const { minute, second } = useTimer({
-    isStart: sendCode,
-    time: 60,
-    timeOver,
-    setTimeOver,
+  const sendCodeMutation = useMutation({
+    mutationFn: sendCodeMutationFn,
+  });
+  const verifyCodeMutation = useMutation({
+    mutationFn: VerifyCodeMutationFn,
+    onError(error) {
+      if (error && verifyCodeRef.current) {
+        verifyCodeRef.current.value = "";
+      }
+    },
   });
 
-  console.log(status);
+  // console.log(sendCodeMutation, "send");
+  // console.log(verifyCodeMutation, "veri");
 
-  const sendCodeSubmit: FormEventHandler = async (e) => {
+  const handleSendCodeStart = () => {
+    setStartTimer(true);
+  };
+
+  const sendCodeSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
     if (!emailRef.current) return;
@@ -82,102 +64,115 @@ const EmailVerificationPage = () => {
     const emailValue = emailRef.current.value;
 
     if (!emailRegExp.test(emailValue)) {
-      setStatus((prev) => ({
-        ...prev,
-        type: "send",
-        message: "Invalid Email",
-        isError: true,
-      }));
+      handleOpenModal();
       return;
     }
 
     // fetching
-
-    try {
-      setStatus((prev) => ({
-        ...prev,
-        isLoading: true,
-      }));
-
-      const url = `http://localhost:3000/auth/email-verification/api/sendCode?email=${emailValue}`;
-      const res = await fetchUtils({ url });
-
-      setStatus((prev) => ({
-        ...prev,
-        isSuccess: true,
-        isError: false,
-        message: "success",
-        type: "send",
-      }));
-
-      console.log(res);
-    } catch (error) {
-      if (error instanceof Error) {
-        setStatus((prev) => ({
-          ...prev,
-          isSuccess: false,
-          isError: true,
-          isLoading: false,
-          message: error.message,
-        }));
-      }
-    } finally {
-      setStatus((prev) => ({ ...prev, type: "send", isLoading: false }));
-    }
+    sendCodeMutation.mutate({ email: emailValue });
   };
   const verifyCodeSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    handleOpenModal();
-    setSendCode(true);
+    if (!emailRef.current || !verifyCodeRef.current) {
+      return;
+    }
+
+    const email = emailRef.current.value;
+    const token = verifyCodeRef.current.value;
+
+    verifyCodeMutation.mutate({ email, token });
   };
 
-  if (status.isLoading) return <div>...loading</div>;
+  const isLoading = sendCodeMutation.isPending || verifyCodeMutation.isPending;
 
-  console.log(status);
+  const sendCodeDisabled = startTimer || sendCodeMutation.isPending;
+
+  useEffect(() => {
+    if (open) {
+      handleStopTimer();
+    }
+  }, [open]);
 
   return (
     <main className={clsx("container", styles.main)}>
+      {isLoading && <LoadingSpinner />}
       <h1 className={styles.title}>Email Verification</h1>
 
       <form className={styles.sendCode_form} onSubmit={sendCodeSubmit}>
         <InputField ref={emailRef} label={"Email"} name={"email"} />
 
-        <Button color="blue" fullWidth disabled={isSend && status.isSuccess}>
-          Send Code
+        <Button color="blue" fullWidth disabled={sendCodeDisabled}>
+          Send
         </Button>
       </form>
 
-      {sendCode && (
+      {sendCodeMutation.isSuccess && (
         <form onSubmit={verifyCodeSubmit}>
           <div className={styles.code}>
-            <InputField label="Code" name="code" maxLength={6} />
+            <InputField
+              ref={verifyCodeRef}
+              label="Code"
+              name="code"
+              maxLength={6}
+            />
 
             <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
           </div>
-          <Button type="submit" color="blue" fullWidth disabled={timeOver}>
+          <Button
+            type="submit"
+            color="blue"
+            fullWidth
+            disabled={timeOver || sendCodeMutation.isPending}
+          >
             Verification Code
           </Button>
         </form>
       )}
 
-      {/* send success modal & verification timer start */}
-      <AlertModal open={isSend && status.isSuccess} onCancel={onSendCode}>
-        <p>sent to link, please check your email</p>
-      </AlertModal>
+      {open && (
+        <>
+          {/* validation error modal */}
+          <AlertModal open onCancel={handleOpenModal}>
+            <p>Invalid Email</p>
+          </AlertModal>
+        </>
+      )}
 
-      {/* send error modal */}
-      <AlertModal open={isSend && status.isError} onCancel={onResetState}>
-        <p>{status.message}</p>
-      </AlertModal>
+      <>
+        {/* send success modal & verification timer start */}
+        <AlertModal
+          open={sendCodeMutation.isSuccess}
+          onCancel={handleSendCodeStart}
+        >
+          <p>Code sent to your email. Please check your email.</p>
+        </AlertModal>
 
-      {/* verification fail modal */}
-      {/* <AlertModal
-        open={verifyCodeAction.isError === true}
-        onCancel={() => router.replace(ROUTE.EMAIL_VERIFICATION)}
-      >
-        <p>{verifyCodeAction.errorMessage}</p>
-      </AlertModal> */}
+        {/* send error modal */}
+        <AlertModal
+          open={sendCodeMutation.isError}
+          onCancel={() => sendCodeMutation.reset()}
+        >
+          <p>{sendCodeMutation.error?.message}</p>
+        </AlertModal>
+      </>
+
+      <>
+        {/* verification success modal */}
+        <AlertModal
+          open={verifyCodeMutation.isSuccess}
+          onCancel={() => router.push(ROUTE.SIGN_UP)}
+        >
+          <p>Verification successful</p>
+        </AlertModal>
+        {/* verification error modal */}
+        <AlertModal
+          open={verifyCodeMutation.isError}
+          onCancel={() => verifyCodeMutation.reset()}
+        >
+          <p>{verifyCodeMutation.error?.message}</p>
+        </AlertModal>
+      </>
     </main>
   );
 };

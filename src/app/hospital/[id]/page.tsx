@@ -4,9 +4,10 @@ import React, { Suspense } from "react";
 import styles from "./hospitalDetail.module.scss";
 import HospitalTab from "./components/tab";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
-import { getHospitalMainAPI } from "../api/main";
+import { getHospitalMainAPI } from "../../api/hospital/[id]/main";
 import Floating, { FloatItem } from "./components/floating";
 import { redirect } from "next/navigation";
+import PageHeader from "@/components/molecules/header/page-header";
 
 interface HospitalDetailPageProps {
   params: { id: string };
@@ -32,19 +33,9 @@ const HospitalDetailPage = async ({
   }, []);
 
   return (
-    <>
-      <div className={styles.header}>
-        <div>{data[0].name}</div>
-
-        <Image
-          className={styles.favorite}
-          src="/icons/icon_favorite_disable.svg"
-          alt="favorite"
-          width={24}
-          height={24}
-        />
-      </div>
-      <main className={styles.main}>
+    <main>
+      <PageHeader name={data[0].name} />
+      <div className={styles.main}>
         {/* <ThumbnailImg src={data[0].hospital.imageurls[0]} alt="thumbnail" /> */}
         <div className={styles.thumbnail_box}>
           <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
@@ -57,8 +48,8 @@ const HospitalDetailPage = async ({
 
         {/* floating */}
         <Floating float={getFloatList} />
-      </main>
-    </>
+      </div>
+    </main>
   );
 };
 

@@ -13,9 +13,9 @@ const AllEventTab = () => {
   const currentTab = useSearchParams().get(TAB) || tabList[0].key;
 
   const Component: Record<string, JSX.Element> = {
-    info: <InfoTab />,
-    event: <EventTab />,
-    review: <ReviewTab />,
+    info: <InfoTab id={""} />,
+    event: <EventTab id={""} />,
+    review: <ReviewTab id={""} />,
   };
 
   return (
