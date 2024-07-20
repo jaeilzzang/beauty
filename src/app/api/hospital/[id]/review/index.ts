@@ -6,10 +6,11 @@ import {
 
 export const getHospitalReviewAPI = async ({
   id,
+  pageParam = 0,
 }: HospitalDetailReviewInputDto): Promise<HospitalDetailReviewOutDto> => {
-  const url = `http://localhost:3000/api/hospital/${id}/review`;
+  const url = `http://localhost:3000/api/hospital/${id}/review?pageParam=${pageParam}`;
 
   const data = await fetchUtils<HospitalDetailReviewOutDto>({ url });
 
-  return data ?? [];
+  return data ?? { data: [], nextCursor: undefined };
 };

@@ -1,29 +1,35 @@
 import { createClient } from "@/utils/supabase/server";
+import { LIMIT } from "./constnat";
 
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
 ) {
-  const id_hospital = params.id;
   const supabase = createClient();
+
+  const id_hospital = params.id;
+
+  const { searchParams } = new URL(req.url);
+  const pageParam = parseInt(searchParams.get("pageParam") as string);
+
+  const offset = pageParam * LIMIT;
+  const limit = offset + LIMIT - 1;
 
   try {
     const { data, error, count, status, statusText } = await supabase
       .from("event")
       .select("*", { count: "exact" })
       .match({ id_hospital })
-      .order("id_unique", { ascending: true });
+      .range(offset, limit)
+      .order("created_at", { ascending: true });
 
     if (error) {
       return Response.json({ data: null }, { status, statusText });
     }
 
-    const payload = {
-      data,
-      count,
-    };
+    const nextCursor = count && limit < count;
 
-    return Response.json(payload, { status: 200, statusText: "success" });
+    return Response.json({ data, nextCursor }, { status, statusText });
   } catch (error) {
     if (error instanceof Error) {
       return Response.json(

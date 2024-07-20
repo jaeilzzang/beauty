@@ -1,4 +1,9 @@
-export interface HospitalDetailEventInputDto {
+import {
+  InfinityScrollOutputDto,
+  InfinityScrollInputDto,
+} from "@/types/infinite";
+
+export interface HospitalDetailEventInputDto extends InfinityScrollInputDto {
   id: string;
 }
 
@@ -16,7 +21,6 @@ export interface HospitalDetailEventData {
   id_unique: number;
 }
 
-export interface HospitalDetailEventOutDto {
+export interface HospitalDetailEventOutDto extends InfinityScrollOutputDto {
   data: HospitalDetailEventData[];
-  count: number;
 }

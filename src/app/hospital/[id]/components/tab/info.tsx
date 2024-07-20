@@ -2,7 +2,6 @@ import { getHospitalInfoAPI } from "@/app/api/hospital/[id]/info";
 import styles from "./styles/info.module.scss";
 import * as React from "react";
 import { Map } from "../../../../../components/common/map";
-import Image from "next/image";
 import Avatar from "@/components/atoms/avatar";
 
 type TContent = { title: string; content: string };
@@ -51,16 +50,14 @@ const InfoTab = async ({ id }: InfoTabProps) => {
 
   return (
     <>
-      {InfoDataList.map(({ id, title, content }) => {
-        return (
-          <React.Fragment key={id}>
-            {renderContent({
-              title,
-              content: infoDetailData[content],
-            })}
-          </React.Fragment>
-        );
-      })}
+      {InfoDataList.map(({ id, title, content }) => (
+        <React.Fragment key={id}>
+          {renderContent({
+            title,
+            content: infoDetailData[content],
+          })}
+        </React.Fragment>
+      ))}
 
       <div className={styles.content_wrapper}>
         <h2 className={styles.title}>Doctors</h2>

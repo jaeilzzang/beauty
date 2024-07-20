@@ -1,27 +1,49 @@
-import { ReviewCard } from "@/components/molecules/card";
+"use client";
+
 import { getHospitalReviewAPI } from "@/app/api/hospital/[id]/review";
+import LoadingSpinner from "@/components/atoms/loading/spinner";
+import { ReviewCard } from "@/components/molecules/card";
+import { useInfinity } from "@/hooks/useInfinity";
+import { useParams } from "next/navigation";
+import { useRef, Fragment } from "react";
 
-interface ReviewTabProps {
-  id: string;
-}
+const ReviewTab = () => {
+  const { id }: { id: string } = useParams();
+  const observerElem = useRef<HTMLDivElement>(null);
 
-const ReviewTab = async ({ id }: ReviewTabProps) => {
-  const { data, count } = await getHospitalReviewAPI({ id });
+  const { data, error, isFetching, isFetchingNextPage, status } = useInfinity({
+    observerElem,
+    queryKey: ["hospital_detail", id],
+    fetchFn: (pageParam) => getHospitalReviewAPI({ id, pageParam }),
+  });
 
-  // console.log(data, "event");
+  if (!data || status === "pending") return <LoadingSpinner />;
+
+  if (error && status === "error") return <div>Error: {error.message}</div>;
 
   return (
     <>
-      {data.map((e) => (
-        <ReviewCard
-          key={e.id_unique}
-          src={e.reviewimageurls[0]}
-          alt="thumbnail"
-          content={e.description}
-          id={e.user?.nickname || ""}
-          name={e.hospital.name}
-        />
+      {data.pages.map((item, i) => (
+        <Fragment key={i}>
+          {item.data.map(
+            ({ id_unique, reviewimageurls, description, user, hospital }) => (
+              <ReviewCard
+                key={id_unique}
+                src={reviewimageurls[0]}
+                alt="thumbnail"
+                content={description}
+                id={user?.nickname || ""}
+                name={hospital.name}
+              />
+            )
+          )}
+        </Fragment>
       ))}
+      {isFetching && isFetchingNextPage ? (
+        <LoadingSpinner />
+      ) : (
+        <div ref={observerElem}></div>
+      )}
     </>
   );
 };

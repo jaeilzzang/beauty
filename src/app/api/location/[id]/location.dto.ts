@@ -1,17 +1,20 @@
-export interface LocationDetailInputDto {
-  id: string;
+import { TCoordinatesType } from "@/components/common/map";
+import {
+  InfinityScrollInputDto,
+  InfinityScrollOutputDto,
+} from "@/types/infinite";
+
+export interface LocationDetailInputDto extends InfinityScrollInputDto {
+  id?: string;
 }
 
 export interface LocationDetailData {
   id_unique: string;
   imageurls: string[];
   name: string;
-  location: string;
-  latitude: number;
-  longitude: number;
 }
 
-export interface LocationDetailOutputDto {
+export interface LocationDetailOutputDto extends InfinityScrollOutputDto {
   data: LocationDetailData[];
-  count: number;
+  position: TCoordinatesType[];
 }

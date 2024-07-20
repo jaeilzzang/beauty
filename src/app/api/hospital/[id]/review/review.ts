@@ -1,4 +1,9 @@
-export interface HospitalDetailReviewInputDto {
+import {
+  InfinityScrollOutputDto,
+  InfinityScrollInputDto,
+} from "@/types/infinite";
+
+export interface HospitalDetailReviewInputDto extends InfinityScrollInputDto {
   id: string;
 }
 
@@ -17,7 +22,6 @@ export interface ReviewData {
   user: { nickname: string } | null;
 }
 
-export interface HospitalDetailReviewOutDto {
+export interface HospitalDetailReviewOutDto extends InfinityScrollOutputDto {
   data: ReviewData[];
-  count: number;
 }

@@ -20,9 +20,5 @@ export const VerifyCodeMutationFn = async ({
     },
   });
 
-  if (!res.ok) {
-    throw new Error(res.statusText);
-  }
-
-  return res.json;
+  return res;
 };

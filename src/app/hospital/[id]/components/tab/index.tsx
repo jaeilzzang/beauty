@@ -6,15 +6,9 @@ import LoadingSpinner from "@/components/atoms/loading/spinner";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-const InfoTab = dynamic(() => import("./info"), {
-  loading: () => <LoadingSpinner />,
-});
-const EventTab = dynamic(() => import("./event"), {
-  loading: () => <LoadingSpinner />,
-});
-const ReviewTab = dynamic(() => import("./review"), {
-  loading: () => <LoadingSpinner />,
-});
+const InfoTab = dynamic(() => import("./info"));
+const EventTab = dynamic(() => import("./event"));
+const ReviewTab = dynamic(() => import("./review"));
 
 interface HospitalTabProps {
   currentTab: string;
@@ -24,8 +18,8 @@ interface HospitalTabProps {
 const HospitalTab = ({ currentTab, id }: HospitalTabProps) => {
   const Component: Record<string, JSX.Element> = {
     info: <InfoTab id={id} />,
-    event: <EventTab id={id} />,
-    review: <ReviewTab id={id} />,
+    event: <EventTab />,
+    review: <ReviewTab />,
   };
 
   return (

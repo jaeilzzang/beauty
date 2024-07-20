@@ -6,6 +6,7 @@ export const floatKey = [
   "youtube",
   "ticktok",
   "snapchat",
+  "tell",
 ] as const;
 
 export type TFloatKey = (typeof floatKey)[number];
@@ -31,4 +32,5 @@ export const TFloatLogoImg: Record<TFloatKey, string> = {
   snapchat: "/icons/icon_sns_snapchat.png",
   ticktok: "/icons/icon_sns_ticktok.png",
   youtube: "/icons/icon_sns_youtube.svg",
+  tell: "/icons/icon_sns_tell.svg",
 };
