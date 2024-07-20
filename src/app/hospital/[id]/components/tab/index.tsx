@@ -1,4 +1,4 @@
-import { tabList } from "./constants";
+import { tabList } from "./constant";
 
 import TabComponent from "@/components/molecules/tab";
 

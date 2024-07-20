@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React, { Suspense } from "react";
 
-import styles from "./hospitalDetail.module.scss";
+import styles from "./hospital-detail..module.scss";
 import HospitalTab from "./components/tab";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
 import { getHospitalMainAPI } from "../../api/hospital/[id]/main";

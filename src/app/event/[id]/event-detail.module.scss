@@ -1,13 +1,22 @@
 .section {
+  max-width: 768px;
+  margin: 0 auto;
+
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 1rem;
+
+  padding: 0 1rem;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
 }
 
 .surgical {
-  padding: 1rem 0;
-
-  //   background-color: brown;
+  // padding: 1rem 0;
 }
 
 .surgical_ul {
@@ -15,7 +24,6 @@
   align-items: center;
 
   margin: 1rem 0;
-  margin-left: 1rem;
 
   gap: 1rem;
 }
@@ -31,11 +39,15 @@
 
 .hospital_info {
   flex: 1;
-
   text-align: right;
 
   p {
     padding: 1rem;
-    background-color: red;
   }
+}
+
+.hospital_link {
+  display: flex;
+  justify-content: end;
+  padding: 1rem;
 }

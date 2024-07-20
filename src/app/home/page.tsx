@@ -20,7 +20,7 @@ export default async function Home({
 }: {
   searchParams: { locationNum: string };
 }) {
-  // const bannerItem = await getBannerAPI();
+  const bannerItem = await getBannerAPI();
 
   const renderLocalChip = () => {
     return (
@@ -43,7 +43,7 @@ export default async function Home({
 
   return (
     <main>
-      <Banner bannerItem={[]} />
+      <Banner bannerItem={bannerItem.data} />
 
       <section className={styles.section}>
         {/* Beauty */}

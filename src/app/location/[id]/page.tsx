@@ -1,50 +1,56 @@
 "use client";
 
-import { Fragment, useRef } from "react";
-
-import styles from "./locationDetail.module.scss";
-
 import { getLocationDetailAPI } from "../../api/location/[id]";
 
 import { useParams } from "next/navigation";
-import { useInfinity } from "@/hooks/useInfinity";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
 import { LocationMap } from "../components/map";
-import { LocationItem } from "../components/item";
+import { InfinityItemList } from "@/components/template/InfinityItem";
+import { HospitalCard } from "@/components/molecules/card";
+import { ROUTE } from "@/router";
+import { getPositionAPI } from "@/app/api/location/[id]/position";
+import { useQuery } from "@tanstack/react-query";
+import styles from "./location-detail.module.scss";
 
 interface LocationDetailPageProps {}
 
 const LocationDetailPage = ({}: LocationDetailPageProps) => {
   const { id }: { id: string } = useParams();
 
-  const observerElem = useRef<HTMLDivElement>(null);
-
-  const { data, error, isFetching, isFetchingNextPage, status } = useInfinity({
-    observerElem,
-    queryKey: ["location_detail", id],
-    fetchFn: (pageParam) => getLocationDetailAPI({ id, pageParam }),
+  const { data } = useQuery({
+    queryKey: ["position"],
+    queryFn: () => getPositionAPI({ id }),
   });
 
-  if (!data || status === "pending") return <LoadingSpinner />;
-
-  if (error && status === "error") return <div>Error: {error.message}</div>;
+  if (!data) return <LoadingSpinner />;
 
   return (
     <main>
-      <LocationMap name={id.toUpperCase()} position={data.pages[0].position} />
-      {data.pages.map((e, i) => {
-        return (
-          <Fragment key={i}>
-            <LocationItem key={i} data={e.data} />
-          </Fragment>
-        );
-      })}
+      <LocationMap name={id.toUpperCase()} position={data.position} />
 
-      {isFetching && isFetchingNextPage ? (
-        <LoadingSpinner />
-      ) : (
-        <div ref={observerElem}></div>
-      )}
+      <InfinityItemList
+        className={styles.grid}
+        fetchFn={getLocationDetailAPI}
+        queryKey={"surgeries_reviews"}
+      >
+        {(item) => {
+          return (
+            <>
+              {item.data.map(({ id_unique, imageurls, name }) => {
+                return (
+                  <HospitalCard
+                    key={id_unique}
+                    src={imageurls[0]}
+                    alt={name}
+                    name={name}
+                    href={ROUTE.HOSPITAL_DETAIL("") + id_unique}
+                  />
+                );
+              })}
+            </>
+          );
+        }}
+      </InfinityItemList>
     </main>
   );
 };

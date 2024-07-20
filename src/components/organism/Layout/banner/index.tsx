@@ -17,10 +17,10 @@ import styles from "./banner.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Link from "next/link";
 import { ROUTE } from "@/router";
-import { BannerOutputDto } from "@/app/api/home/banner/banner.dto";
+import { BannerItem } from "@/app/api/home/banner/banner.dto";
 
 interface BannerProps {
-  bannerItem: BannerOutputDto[];
+  bannerItem: BannerItem[];
 }
 
 export const Banner = ({ bannerItem = [] }: BannerProps) => {
@@ -41,14 +41,15 @@ export const Banner = ({ bannerItem = [] }: BannerProps) => {
     <Swiper {...setting}>
       {bannerItem.map(({ id, id_unique, imgurl, name }) => (
         <SwiperSlide key={id_unique}>
-          <Link href={ROUTE.RECOMMEND_DETAIL + id}>
-            <div className={styles.banner}>
+          <Link href={ROUTE.RECOMMEND_DETAIL("") + id}>
+            <div className={styles.banner_img}>
               <Image
                 fill
                 src={imgurl}
                 alt={name}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
+              <span className={styles.banner_name}>{name}</span>
             </div>
           </Link>
         </SwiperSlide>

@@ -6,5 +6,5 @@ export interface InfinityScrollInputDto {
 }
 
 export interface InfinityScrollOutputDto {
-  nextCursor?: boolean;
+  nextCursor?: boolean | number;
 }

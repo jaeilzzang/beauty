@@ -1,5 +1,6 @@
-import RecommendTab from "./components/tab";
-import styles from "./recommendDetailPage.module.scss";
+import { RecommendTab } from "./tab";
+
+import styles from "./recommend-detail.module.scss";
 
 const RecommendDetailPage = () => {
   return (

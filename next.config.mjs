@@ -36,6 +36,17 @@ const nextConfig = {
         destination: "/hospital/:id?tab=info",
         permanent: true,
       },
+      {
+        source: "/recommend/:id",
+        missing: [
+          {
+            type: "query",
+            key: "tab",
+          },
+        ],
+        destination: "/recommend/:id?tab=event",
+        permanent: true,
+      },
     ];
   },
 };

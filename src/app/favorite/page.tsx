@@ -48,14 +48,49 @@ const FavoritePage = () => {
 
           {/* check icon version */}
           <div className={styles.check}>check</div>
-          <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"123"} />
+          <HospitalCard
+            src={"/banner/banner1.jpeg"}
+            alt={""}
+            name={"123"}
+            href={""}
+          />
         </div>
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"1"} />
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"2"} />
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"3"} />
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"4"} />
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"11"} />
-        <HospitalCard src={"/banner/banner1.jpeg"} alt={""} name={"22"} />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"1"}
+          href={""}
+        />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"2"}
+          href={""}
+        />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"3"}
+          href={""}
+        />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"4"}
+          href={""}
+        />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"11"}
+          href={""}
+        />
+        <HospitalCard
+          src={"/banner/banner1.jpeg"}
+          alt={""}
+          name={"22"}
+          href={""}
+        />
       </div>
     </main>
   );

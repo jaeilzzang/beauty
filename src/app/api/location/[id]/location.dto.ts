@@ -1,4 +1,3 @@
-import { TCoordinatesType } from "@/components/common/map";
 import {
   InfinityScrollInputDto,
   InfinityScrollOutputDto,
@@ -16,5 +15,4 @@ export interface LocationDetailData {
 
 export interface LocationDetailOutputDto extends InfinityScrollOutputDto {
   data: LocationDetailData[];
-  position: TCoordinatesType[];
 }

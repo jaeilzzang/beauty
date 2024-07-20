@@ -12,10 +12,7 @@ export const getLocationDetailAPI = async ({
 
   const data = await fetchUtils<LocationDetailOutputDto>({
     url,
-    fetchOptions: { cache: "no-cache" },
   });
-
-  console.log(data, "data");
 
   return data ?? [];
 };

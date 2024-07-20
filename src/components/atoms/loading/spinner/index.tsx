@@ -21,7 +21,7 @@ const LoadingSpinner = ({
 
   return (
     <div className={styles.scope}>
-      <div className={styles.loader} />;
+      <div className={styles.loader} />
     </div>
   );
 };
