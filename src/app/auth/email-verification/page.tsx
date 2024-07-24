@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
 
 import useTimer from "@/hooks/useTimer";
-import { FormEventHandler, useEffect, useRef, useState } from "react";
+import { FormEventHandler, useRef, useState } from "react";
 
 import { emailRegExp } from "@/utils/regexp";
 
@@ -84,7 +84,7 @@ const EmailVerificationPage = () => {
         ...prev,
         open: true,
         content: <p>Verification successful</p>,
-        onClick: () => router.push(ROUTE.SIGN_UP),
+        onClick: () => router.replace(ROUTE.SIGN_UP),
       }));
     },
     onError(error) {
@@ -93,7 +93,11 @@ const EmailVerificationPage = () => {
         open: true,
         content: <p>{error.message}</p>,
         onClick: () => {
+          // 에러 발생 시 에러 모달 show
+          // Timer 정지
+          // 입력했던 코드 초기화 && 입력창으로 focus
           verifyCodeMutation.reset();
+          setStartTimer(true);
 
           if (error && verifyCodeRef.current) {
             verifyCodeRef.current.value = "";
@@ -103,9 +107,6 @@ const EmailVerificationPage = () => {
       }));
     },
   });
-
-  console.log(sendCodeMutation, "send");
-  console.log(verifyCodeMutation, "veri");
 
   const sendCodeSubmit: FormEventHandler = (e) => {
     e.preventDefault();
@@ -138,19 +139,13 @@ const EmailVerificationPage = () => {
     const token = verifyCodeRef.current.value;
 
     verifyCodeMutation.mutate({ email, token });
+
+    handleStopTimer();
   };
 
   const isLoading = sendCodeMutation.isPending || verifyCodeMutation.isPending;
 
   const sendCodeDisabled = startTimer || sendCodeMutation.isPending;
-
-  // useEffect(() => {
-  //   if (open) {
-  //     handleStopTimer();
-  //   }
-  // }, [open]);
-
-  console.log(modalContent);
 
   return (
     <main className={clsx("container", styles.main)}>

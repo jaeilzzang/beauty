@@ -1,6 +1,7 @@
 .section {
   max-width: 768px;
   margin: 0 auto;
+  margin-top: 2rem;
 
   display: flex;
   flex-direction: column;
@@ -48,6 +49,6 @@
 
 .hospital_link {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 1rem;
 }

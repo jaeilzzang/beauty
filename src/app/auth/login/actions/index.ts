@@ -37,10 +37,13 @@ export const signInActions = async (prevState: any, formData: FormData) => {
   }
 
   const supabase = createClient();
-  const { error } = await supabase.auth.signInWithPassword({
+
+  const { error, data } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
+
+  console.log(data, error);
 
   if (!error) {
     revalidatePath(ROUTE.HOME);

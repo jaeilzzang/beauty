@@ -21,6 +21,27 @@ export async function POST(req: Request) {
       );
     }
 
+    const findUser = await supabase
+      .from("user")
+      .select("uuid,email,email_verify")
+      .match({ email });
+
+    console.log(findUser, "findUser");
+
+    if (!findUser.data || !findUser.data[0].uuid) {
+      throw Error("Not Found User");
+    }
+
+    const createEmailVerify = await supabase
+      .from("user")
+      .update({ email_verify: true })
+      .match({ uuid: findUser.data[0].uuid });
+
+    if (createEmailVerify.error) {
+      const { error } = createEmailVerify;
+      throw Error(error.message || error.code);
+    }
+
     return Response.json({ data }, { status: 200, statusText: "success" });
   } catch (error) {
     if (error instanceof Error) {

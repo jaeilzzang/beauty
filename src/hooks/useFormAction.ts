@@ -15,7 +15,7 @@ export const useFormAction = ({
   initialState = { error: {} },
 }: FormActionProps) => {
   const status = useSearchParams().get("status");
-  const errorMessage = useSearchParams().get("errorMsg");
+  const errorMessage = useSearchParams().get("msg");
 
   const [state, formAction] = useFormState<State, FormData>(
     action,

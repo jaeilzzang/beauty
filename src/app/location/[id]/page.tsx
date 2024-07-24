@@ -22,7 +22,7 @@ const LocationDetailPage = ({}: LocationDetailPageProps) => {
     queryFn: () => getPositionAPI({ id }),
   });
 
-  if (!data) return <LoadingSpinner />;
+  if (!data) return <LoadingSpinner pageLoading />;
 
   return (
     <main>

@@ -33,11 +33,11 @@ export const InfinityItemList = <T extends InfinityScrollOutputDto>({
 
   const { data, error, isFetching, isFetchingNextPage, status } = useInfinity({
     observerElem,
-    queryKey: [queryKey, id],
+    queryKey: [queryKey, id ?? 0],
     fetchFn: (pageParam) => fetchFn({ pageParam, id }),
   });
 
-  if (!data || status === "pending") return <LoadingSpinner />;
+  if (!data || status === "pending") return <LoadingSpinner pageLoading />;
   if (error && status === "error") return <div>Error: {error.message}</div>;
 
   return (

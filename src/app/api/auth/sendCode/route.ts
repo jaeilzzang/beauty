@@ -7,20 +7,33 @@ export async function GET(req: Request) {
   const supabase = createClient();
 
   try {
-    const { data, error } = await supabase.auth.signInWithOtp({
-      email,
-    });
+    const { data: users, error: userError } = await supabase
+      .from("user")
+      .select("uuid,email,email_verify")
+      .match({ email });
 
-    console.log(error, data, "sendcode");
+    if (userError || !users || users.length === 0) {
+      throw new Error("Not Found User");
+    }
 
-    if (error) {
+    const user = users[0];
+
+    // 이미 인증을 한 유저
+    if (user.email_verify) {
       return Response.json(
-        { data },
-        { status: error.status, statusText: error.code }
+        { user },
+        { status: 307, statusText: "is already registered try to login" }
       );
     }
 
-    return Response.json({ data }, { status: 200, statusText: "success" });
+    const { data, error } = await supabase.auth.signInWithOtp({ email });
+    console.log(data, user);
+
+    if (error) {
+      return Response.json({ status: error.status, statusText: error.code });
+    }
+
+    return Response.json({ user }, { status: 200, statusText: "success" });
   } catch (error) {
     if (error instanceof Error) {
       return Response.json(

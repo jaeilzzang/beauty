@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Image from "next/image";
 import React, { Suspense } from "react";
 
@@ -8,6 +10,7 @@ import { getHospitalMainAPI } from "../../api/hospital/[id]/main";
 import Floating, { FloatItem } from "./components/floating";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/molecules/header/page-header";
+import { HospitalFavoriteIcon } from "@/components/atoms/favorite";
 
 interface HospitalDetailPageProps {
   params: { id: string };
@@ -34,15 +37,16 @@ const HospitalDetailPage = async ({
 
   return (
     <main>
-      <PageHeader name={data[0].name} />
+      <PageHeader name={data[0].name}>
+        <HospitalFavoriteIcon isFavorite={!!data[0].favorite.length} />
+      </PageHeader>
       <div className={styles.main}>
-        {/* <ThumbnailImg src={data[0].hospital.imageurls[0]} alt="thumbnail" /> */}
         <div className={styles.thumbnail_box}>
           <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
         </div>
 
         {/* tab */}
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense fallback={<LoadingSpinner pageLoading />}>
           <HospitalTab currentTab={searchParams.tab} id={params.id} />
         </Suspense>
 

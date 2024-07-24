@@ -5,93 +5,111 @@ import { HospitalCard } from "@/components/molecules/card";
 import styles from "./favorite.module.scss";
 import { useState } from "react";
 
+import { deleteFavoriteAPI, getAllFavoriteAPI } from "../api/auth/favorite";
+
+import { InfinityItemList } from "@/components/template/InfinityItem";
+import PageHeader from "@/components/molecules/header/page-header";
+import { ROUTE } from "@/router";
+import { FavoriteIcon } from "@/components/icons/favoriteIcon";
+import Button from "@/components/atoms/button";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+
+import { useRouter } from "next/navigation";
+
 const FavoritePage = () => {
+  const queryClient = useQueryClient();
+
+  const router = useRouter();
+
   const [selectMode, setSelectMode] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<string[]>([]);
 
-  const onReset = () => {
+  const { mutate } = useMutation({
+    mutationFn: deleteFavoriteAPI,
+    onSuccess: () => {
+      // 캐시초기화
+      queryClient.invalidateQueries({
+        queryKey: ["favorite_list", 0],
+      });
+      router.refresh();
+    },
+  });
+
+  const handleReset = () => {
     setSelectMode(!selectMode);
     setSelectItem([]);
   };
 
-  const onSelect = (item: string) => {
+  const handleSelect = (item: string) => {
     if (!selectMode) return;
 
     setSelectItem((prev) => {
       const isFilter = prev.find((e) => e === item);
 
-      if (isFilter) return prev;
+      if (isFilter) return prev.filter((e) => e !== isFilter);
 
       return [...prev, item];
     });
   };
 
-  console.log(selectItem);
+  const handleDelete = () => {
+    mutate({ id_hospital: JSON.stringify(selectItem) });
+  };
+
+  const isFavorite = (id: string) => selectItem.includes(id);
+  const href = (id: string) =>
+    selectMode ? "#" : ROUTE.HOSPITAL_DETAIL("") + id;
 
   return (
     <main>
-      <div className={styles.btn_wrapper}>
-        {selectMode ? (
-          <div>
-            <button>삭제</button>
-            <button onClick={onReset}>취소</button>
-          </div>
-        ) : (
-          <button onClick={onReset}>선택</button>
-        )}
-      </div>
-
-      <div className={styles.card_wrapper}>
-        <div className={styles.card} onClick={() => onSelect("123")}>
-          {/* // checkbox version */}
-          {/* <input type="checkbox" className={styles.check} /> */}
-
-          {/* check icon version */}
-          <div className={styles.check}>check</div>
-          <HospitalCard
-            src={"/banner/banner1.jpeg"}
-            alt={""}
-            name={"123"}
-            href={""}
-          />
+      <PageHeader name="Favorite">
+        <div className={styles.btn_wrapper}>
+          {selectMode ? (
+            <div className={styles.remove_btn}>
+              <Button color="blue" onClick={handleDelete}>
+                Delete
+              </Button>
+              <Button color="blue" onClick={handleReset}>
+                Cancel
+              </Button>
+            </div>
+          ) : (
+            <Button color="blue" onClick={handleReset}>
+              Edit
+            </Button>
+          )}
         </div>
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"1"}
-          href={""}
-        />
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"2"}
-          href={""}
-        />
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"3"}
-          href={""}
-        />
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"4"}
-          href={""}
-        />
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"11"}
-          href={""}
-        />
-        <HospitalCard
-          src={"/banner/banner1.jpeg"}
-          alt={""}
-          name={"22"}
-          href={""}
-        />
-      </div>
+      </PageHeader>
+
+      <InfinityItemList
+        className={styles.card_wrapper}
+        fetchFn={getAllFavoriteAPI}
+        queryKey="favorite_list"
+      >
+        {(data) =>
+          data.favorite.map(({ id, hospital }) => {
+            return (
+              <div
+                key={id}
+                className={styles.card}
+                onClick={() => handleSelect(hospital.id_unique)}
+              >
+                <div className={styles.favorite_icon}>
+                  <FavoriteIcon
+                    fill={isFavorite(hospital.id_unique) ? "red" : "white"}
+                  />
+                </div>
+                <HospitalCard
+                  alt={hospital.name}
+                  name={hospital.name}
+                  href={href(hospital.id_unique)}
+                  src={hospital.imageurls[0]}
+                />
+              </div>
+            );
+          })
+        }
+      </InfinityItemList>
     </main>
   );
 };

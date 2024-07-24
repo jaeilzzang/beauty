@@ -24,7 +24,7 @@ export async function GET(
       .order("created_at", { ascending: true });
 
     if (error) {
-      return Response.json({ data: null }, { status, statusText });
+      return Response.json({ status, statusText });
     }
 
     const nextCursor = count && limit < count;
@@ -32,10 +32,7 @@ export async function GET(
     return Response.json({ data, nextCursor }, { status, statusText });
   } catch (error) {
     if (error instanceof Error) {
-      return Response.json(
-        { data: null },
-        { status: 500, statusText: error.message }
-      );
+      return Response.json({ status: 500, statusText: error.message });
     }
   }
 }

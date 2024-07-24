@@ -13,21 +13,28 @@ import { useFormAction } from "@/hooks/useFormAction";
 import { signInActions } from "./actions";
 import { AlertModal } from "@/components/template/modal/alert";
 import { useRouter } from "next/navigation";
+import { ErrorMessage } from "@/components/atoms/message/error";
 
 const LoginPage = () => {
   const router = useRouter();
-  const signinAction = useFormAction({ action: signInActions });
-  console.log(signinAction);
+  const {
+    errorMessage,
+    formAction,
+    state: { error },
+  } = useFormAction({ action: signInActions });
 
   return (
     <main className={clsx("container", styles.main)}>
-      <form action={signinAction.formAction} className={styles.form}>
+      <form action={formAction} className={styles.form}>
         <InputField label="Email" name="email" />
+        {error?.email?.length && <ErrorMessage message={error.email[0]} />}
         <InputField type="password" label="Password" name="password" />
+        {error?.password?.length && (
+          <ErrorMessage message={error.password[0]} />
+        )}
 
         <div className={styles.btn_group}>
           <Button color="blue">LOGIN</Button>
-
           <SignUpButton />
         </div>
       </form>
@@ -43,10 +50,10 @@ const LoginPage = () => {
       </div>
 
       <AlertModal
-        open={!!signinAction.errorMessage}
+        open={!!errorMessage}
         onCancel={() => router.replace(ROUTE.LOGIN)}
       >
-        <p>{signinAction.errorMessage}</p>
+        <p>{errorMessage}</p>
       </AlertModal>
     </main>
   );

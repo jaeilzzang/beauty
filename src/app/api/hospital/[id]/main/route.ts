@@ -1,7 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
+import { NextRequest } from "next/server";
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   const id_unique = params.id;
@@ -13,6 +14,7 @@ export async function GET(
       .select(
         `imageurls,
          name,
+         favorite: favorite ("*"),
          hospital_details: hospital_details!hospital_id_unique_fkey (
             tel,
             homepage,

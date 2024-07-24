@@ -1,3 +1,5 @@
+import { FavoriteItem } from "@/app/api/auth/favorite/favorite.dto";
+
 export interface HospitalDetailMainInputDto {
   id: string;
 }
@@ -19,6 +21,7 @@ export interface Hospital {
   imageurls: string[];
   name: string;
   hospital_details: HospitalDetails;
+  favorite: FavoriteItem[];
 }
 
 export interface HospitalDetailMainOutput {

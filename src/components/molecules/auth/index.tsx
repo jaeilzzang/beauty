@@ -1,22 +1,23 @@
 import { ROUTE } from "@/router";
-import { createClient } from "@/utils/supabase/server";
+
 import Link from "next/link";
-import LogoutBtn from "../logout";
+
+import styles from "./auth-header.module.scss";
+import Button from "@/components/atoms/button";
+
+import { getUserAPI } from "@/app/api/auth/getUser";
 
 const Auth = async () => {
-  const supabase = createClient();
+  const users = await getUserAPI();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const href = user ? ROUTE.MY_PAGE : ROUTE.LOGIN;
-  const text = user ? user.email : "login";
+  const href = users ? ROUTE.MY_PAGE : ROUTE.LOGIN;
+  const text = users ? users.user.nickname : "LOGIN";
 
   return (
-    <div>
-      <Link href={href}>{text}</Link>
-      {user && <LogoutBtn />}
+    <div className={styles.auth_header}>
+      <Link href={href}>
+        <Button color="blue">{text}</Button>
+      </Link>
     </div>
   );
 };

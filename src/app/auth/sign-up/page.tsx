@@ -16,24 +16,41 @@ import { AlertModal } from "@/components/template/modal/alert";
 import { ErrorMessage } from "@/components/atoms/message/error";
 import { useFormAction } from "@/hooks/useFormAction";
 import { supabaseClient } from "@/utils/supabase/client";
+import { country } from "@/constants/country";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import LoadingSpinner from "@/components/atoms/loading/spinner";
 
 const SignUpPage = () => {
   const router = useRouter();
-
-  const { errorMessage, formAction, formStatus, isError, state } =
-    useFormAction({ action: signUpActions });
 
   const { handleOpenModal, open } = useModal();
 
   const [nationality, setNationality] = useState<string>("");
 
-  console.log(state);
+  const { errorMessage, formAction, formStatus, isError, state } =
+    useFormAction({ action: signUpActions });
+
+  const getUser = async () => {
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (!data.session) {
+      // redirect(ROUTE.LOGIN);
+    }
+
+    return data;
+  };
+
+  const isUserCheck = useSuspenseQuery({
+    queryKey: ["email_check"],
+    queryFn: getUser,
+  });
 
   const onReset = () => router.replace(ROUTE.LOGIN);
 
   const inputFields = [
     { label: "Email", name: "email" },
     { label: "Password", name: "password" },
+    { label: "Password Confirm", name: "password_confirm" },
     { label: "Name", name: "name" },
     { label: "Nickname", name: "nickname" },
     {
@@ -46,29 +63,25 @@ const SignUpPage = () => {
     },
   ];
 
-  const getUser = async () => {
-    const { data } = await supabaseClient.auth.getSession();
-
-    console.log(data);
-  };
+  if (isUserCheck.isLoading) return <LoadingSpinner backdrop />;
 
   return (
     <main className="container">
-      <div onClick={getUser}> getUser</div>
       <form action={formAction}>
         {inputFields.map(
           ({ label, name, onClick, onFocus, readOnly, value }) => (
-            <div key={name}>
+            <div key={name} className={styles.input_field}>
               <InputField
                 label={label}
                 name={name}
-                type={name === "password" ? "password" : "text"}
+                type={name.startsWith("password") ? "password" : "text"}
                 {...(readOnly && { readOnly })}
                 {...(value && { value })}
                 onClick={onClick}
                 onFocus={onFocus}
+                isError={!!state.error[name]}
               />
-              <ErrorMessage message={state?.error?.[name]} />
+              {<ErrorMessage message={state.error[name]} />}
             </div>
           )
         )}
@@ -85,7 +98,7 @@ const SignUpPage = () => {
       <SearchModal
         onCancel={handleOpenModal}
         onClick={(value) => setNationality(value)}
-        itemList={Array(100).fill("KOREA")}
+        itemList={country}
         open={open}
       />
 

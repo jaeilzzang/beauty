@@ -23,13 +23,18 @@ export async function GET(
       .match({ id });
 
     if (!surgeriesId.data) {
-      return Response.json(
-        { data: null },
-        { status: surgeriesId.status, statusText: surgeriesId.statusText }
-      );
+      const { status, statusText } = surgeriesId;
+      return Response.json({
+        status,
+        statusText,
+      });
     }
 
-    const surgeriesIds = surgeriesId.data[0].id_surgeries;
+    const surgeriesIds = surgeriesId?.data[0]?.id_surgeries;
+
+    if (!surgeriesIds) {
+      return Response.json({ data: [], nextCursor: 0 });
+    }
 
     const { data, error, status, statusText, count } = await supabase
       .from("hospital")
@@ -38,7 +43,7 @@ export async function GET(
       .range(offset, limit);
 
     if (error) {
-      return Response.json({ data: null }, { status, statusText });
+      return Response.json({ status, statusText });
     }
 
     const nextCursor = count && limit < count;
