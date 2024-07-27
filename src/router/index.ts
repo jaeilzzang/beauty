@@ -9,11 +9,12 @@ const createRouter = (prefix: string) => (path: string) => {
 };
 
 const createAuthRouter = createRouter("auth");
+const createUserRouter = createRouter("user");
 const createNormalRouter = createRouter("");
 
 /**
  * nextjs 디테일 페이지 라우팅 방법은 경로/id 입니다.
- * id 대신 원하는 slug 를 사용하시면 되는데 그 인자를 받아서 자동으로 rouer를 만들어주는 함수입니다.
+ * id 대신 원하는 slug 를 사용하시면 되는데 그 인자를 받아서 자동으로 router 만들어주는 함수입니다.
  *
  * @param router - 베이스 루트 ex) blog
  * @param slug - slug ex) id
@@ -28,7 +29,7 @@ export const ROUTE = {
   LOGIN: createAuthRouter("LOGIN"),
   SIGN_UP: createAuthRouter("SIGN_UP"),
   EMAIL_VERIFICATION: createAuthRouter("EMAIL_VERIFICATION"),
-  MY_PAGE: createAuthRouter("MY_PAGE"),
+  MY_PAGE: createUserRouter("MY_PAGE"),
   FORGET_PASSWORD: createAuthRouter("FORGET_PASSWORD"),
   LOCATION: createNormalRouter("LOCATION"),
   LOCATION_DETAIL: createDetailRouter("LOCATION"),
@@ -38,5 +39,5 @@ export const ROUTE = {
   EVENT_DETAIL: createDetailRouter("EVENT"),
   RECOMMEND: createNormalRouter("RECOMMEND"),
   RECOMMEND_DETAIL: createDetailRouter("RECOMMEND"),
-  FAVORITE: createNormalRouter("FAVORITE"),
+  FAVORITE: createUserRouter("FAVORITE"),
 };

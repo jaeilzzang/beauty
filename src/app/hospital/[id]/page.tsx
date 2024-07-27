@@ -1,11 +1,9 @@
-export const dynamic = "force-dynamic";
-
 import Image from "next/image";
-import React, { Suspense } from "react";
+import React from "react";
 
 import styles from "./hospital-detail..module.scss";
 import HospitalTab from "./components/tab";
-import LoadingSpinner from "@/components/atoms/loading/spinner";
+
 import { getHospitalMainAPI } from "../../api/hospital/[id]/main";
 import Floating, { FloatItem } from "./components/floating";
 import { redirect } from "next/navigation";
@@ -46,9 +44,7 @@ const HospitalDetailPage = async ({
         </div>
 
         {/* tab */}
-        <Suspense fallback={<LoadingSpinner pageLoading />}>
-          <HospitalTab currentTab={searchParams.tab} id={params.id} />
-        </Suspense>
+        <HospitalTab currentTab={searchParams.tab} id={params.id} />
 
         {/* floating */}
         <Floating float={getFloatList} />

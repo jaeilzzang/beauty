@@ -9,8 +9,8 @@ const Beauty = async () => {
 
   return (
     <div className={styles.article_wrapper}>
-      {data.map(({ id, imageurls, name, id_unique }) => (
-        <article key={id}>
+      {data.map(({ imageurls, name, id_unique }) => (
+        <article key={id_unique}>
           <Link href={ROUTE.HOSPITAL_DETAIL("") + id_unique}>
             <ThumbnailImg src={imageurls[0]} alt={name} />
           </Link>

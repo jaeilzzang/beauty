@@ -1,54 +1,42 @@
 "use client";
 
-import Button from "@/components/atoms/button";
 import InputField from "@/components/molecules/form/input-field";
 
 import styles from "./email-verification.module.scss";
-import { clsx } from "clsx";
 
-import { AlertModal } from "@/components/template/modal/alert";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ROUTE } from "@/router";
 
 import useTimer from "@/hooks/useTimer";
-import { FormEventHandler, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { emailRegExp } from "@/utils/regexp";
-
-import { useMutation } from "@tanstack/react-query";
-import { sendCodeMutationFn } from "../../api/auth/sendCode";
-import { VerifyCodeMutationFn } from "../../api/auth/verifyCode";
-import LoadingSpinner from "@/components/atoms/loading/spinner";
-
-type State = {
-  open: boolean;
-  content: JSX.Element;
-  onClick: () => void;
-};
+import VerifyButton from "./verifyButton";
+import { useFormState } from "react-dom";
+import verifyActions from "./actions/email-verification.actions";
+import useModal from "@/hooks/useModal";
+import ModalOverlay from "@/components/organism/layout/modal/overlay";
+import Button from "@/components/atoms/button";
 
 const EmailVerificationPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [modalContent, setModalContent] = useState<State>({
-    open: false,
-    content: <></>,
-    onClick: () => {},
-  });
+  const paramsObject = Object.fromEntries(searchParams.entries());
+  const emptyParamsCheck = Object.entries(paramsObject).every(
+    ([, value]) => value
+  );
 
-  const handleModalClose = () => {
-    setModalContent((prev) => ({
-      ...prev,
-      content: <></>,
-      onClick: () => {},
-      open: false,
-    }));
-  };
+  if (searchParams.size !== 5 || !emptyParamsCheck) {
+    router.replace(ROUTE.SIGN_UP);
+  }
 
-  const emailRef = useRef<HTMLInputElement>(null);
-  const verifyCodeRef = useRef<HTMLInputElement>(null);
+  const initNoticeModal = useModal();
+  const timeoutModal = useModal();
+  const formErrorModal = useModal();
 
   const [timeOver, setTimeOver] = useState<boolean>(false);
+
+  const [state, verifyCode] = useFormState(verifyActions, { message: null });
 
   const { minute, second, setStartTimer, startTimer, handleStopTimer } =
     useTimer({
@@ -57,142 +45,89 @@ const EmailVerificationPage = () => {
       setTimeOver,
     });
 
-  const sendCodeMutation = useMutation({
-    mutationFn: sendCodeMutationFn,
-    onSuccess: () => {
-      setModalContent((prev) => ({
-        ...prev,
-        open: true,
-        content: <p>Code sent to your email. Please check your email.</p>,
-        onClick: () => setStartTimer(true),
-      }));
-    },
-    onError(error) {
-      setModalContent((prev) => ({
-        ...prev,
-        open: true,
-        content: <p>{error.message}</p>,
-        onClick: () => sendCodeMutation.reset(),
-      }));
-    },
-  });
-
-  const verifyCodeMutation = useMutation({
-    mutationFn: VerifyCodeMutationFn,
-    onSuccess: () => {
-      setModalContent((prev) => ({
-        ...prev,
-        open: true,
-        content: <p>Verification successful</p>,
-        onClick: () => router.replace(ROUTE.SIGN_UP),
-      }));
-    },
-    onError(error) {
-      setModalContent((prev) => ({
-        ...prev,
-        open: true,
-        content: <p>{error.message}</p>,
-        onClick: () => {
-          // 에러 발생 시 에러 모달 show
-          // Timer 정지
-          // 입력했던 코드 초기화 && 입력창으로 focus
-          verifyCodeMutation.reset();
-          setStartTimer(true);
-
-          if (error && verifyCodeRef.current) {
-            verifyCodeRef.current.value = "";
-            verifyCodeRef.current.focus();
-          }
-        },
-      }));
-    },
-  });
-
-  const sendCodeSubmit: FormEventHandler = (e) => {
-    e.preventDefault();
-
-    if (!emailRef.current) return;
-
-    const emailValue = emailRef.current.value;
-
-    if (!emailRegExp.test(emailValue)) {
-      setModalContent((prev) => ({
-        ...prev,
-        open: true,
-        content: <p>Invalid Email</p>,
-        onClick: handleModalClose,
-      }));
-      return;
-    }
-
-    // fetching
-    sendCodeMutation.mutate({ email: emailValue });
-  };
-  const verifyCodeSubmit: FormEventHandler = (e) => {
-    e.preventDefault();
-
-    if (!emailRef.current || !verifyCodeRef.current) {
-      return;
-    }
-
-    const email = emailRef.current.value;
-    const token = verifyCodeRef.current.value;
-
-    verifyCodeMutation.mutate({ email, token });
-
-    handleStopTimer();
+  const handleStartTimer = () => {
+    setStartTimer(true);
+    initNoticeModal.setOpen(false);
   };
 
-  const isLoading = sendCodeMutation.isPending || verifyCodeMutation.isPending;
+  const handleTimeoutModal = () => {
+    timeoutModal.setOpen(false);
+    router.replace(ROUTE.SIGN_UP);
+  };
 
-  const sendCodeDisabled = startTimer || sendCodeMutation.isPending;
+  useEffect(() => {
+    // 첫 로딩시 이메일 인증하라는 안내 모달
+    if (!startTimer && !initNoticeModal.open && !state.message) {
+      initNoticeModal.setOpen(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    // 시간 초과 시 안내 모달
+    if (startTimer) {
+      timeoutModal.setOpen(true);
+    }
+
+    // formError modal
+
+    if (state.message) {
+      formErrorModal.setOpen(true);
+    }
+  }, [state]);
 
   return (
-    <main className={clsx("container", styles.main)}>
-      {isLoading && <LoadingSpinner backdrop />}
-      <h1 className={styles.title}>Email Verification</h1>
+    <main className={styles.main}>
+      <h1 className={styles.title}>Sign Up</h1>
 
-      <form className={styles.sendCode_form} onSubmit={sendCodeSubmit}>
-        <InputField ref={emailRef} label={"Email"} name={"email"} />
+      <form className={styles.form} action={verifyCode}>
+        <div className={styles.code}>
+          <InputField label="Code" name="code" minLength={6} maxLength={6} />
 
-        <Button color="blue" fullWidth disabled={sendCodeDisabled}>
-          Send
-        </Button>
+          <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
+        </div>
+
+        <VerifyButton disabled={timeOver} />
       </form>
 
-      {sendCodeMutation.isSuccess && (
-        <form onSubmit={verifyCodeSubmit}>
-          <div className={styles.code}>
-            <InputField
-              ref={verifyCodeRef}
-              label="Code"
-              name="code"
-              maxLength={6}
-            />
-
-            <p className={styles.timer}>{`${minute}분 ${second}초`}</p>
-          </div>
-          <Button
-            type="submit"
-            color="blue"
-            fullWidth
-            disabled={timeOver || sendCodeMutation.isPending}
-          >
-            Verification Code
-          </Button>
-        </form>
-      )}
-
+      {/* notice modal */}
       <>
-        <AlertModal
-          open={modalContent.open}
-          onCancel={() => {
-            modalContent.onClick();
-            handleModalClose();
-          }}
+        <ModalOverlay open={initNoticeModal.open} handleClick={() => {}}>
+          <p className={styles.verify_notice}>
+            Check your email! We have sent you a 6-digit code. Enter it below to
+            verify your email address.
+          </p>
+
+          <Button color="blue" onClick={handleStartTimer}>
+            Confirm
+          </Button>
+        </ModalOverlay>
+      </>
+      {/* timeout modal */}
+      <>
+        <ModalOverlay open={timeoutModal.open} handleClick={() => {}}>
+          <p className={styles.verify_notice}>
+            the verification code has expired. Please request a new code to
+            proceed.
+          </p>
+
+          <Button color="blue" onClick={handleTimeoutModal}>
+            Confirm
+          </Button>
+        </ModalOverlay>
+      </>
+
+      {/* form submit error modal */}
+      <>
+        <ModalOverlay
+          open={formErrorModal.open}
+          handleClick={() => router.refresh()}
         >
-          {modalContent.content}
-        </AlertModal>
+          <p className={styles.verify_notice}>{state.message}</p>
+
+          <Button color="blue" onClick={() => router.refresh()}>
+            Confirm
+          </Button>
+        </ModalOverlay>
       </>
     </main>
   );

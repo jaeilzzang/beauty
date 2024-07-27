@@ -1,6 +1,6 @@
 import { fetchUtils } from "@/utils/fetch";
 
-export const VerifyCodeMutationFn = async ({
+export const verifyCodeAPI = async ({
   email,
   token,
 }: {

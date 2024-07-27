@@ -4,13 +4,17 @@ import ModalOverlay from "@/components/organism/layout/modal/overlay";
 
 import styles from "./search-modal.module.scss";
 import { ChangeEventHandler, useState } from "react";
+import {
+  CountryCode,
+  CountryOutputDto,
+} from "@/app/api/auth/countryCode/country-code";
 
-interface SearchModalProps {
+export interface SearchModalProps {
   open: boolean;
 
-  itemList: Array<string>;
+  itemList: CountryOutputDto["countryCode"];
 
-  onClick: (value: string) => void;
+  onClick: (value: CountryCode) => void;
 
   onCancel: () => void;
 }
@@ -26,8 +30,8 @@ export const SearchModal = ({
   const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const search = e.target.value.toLowerCase();
 
-    const findItem = itemList.filter((e) => {
-      const item = e.toLowerCase();
+    const findItem = itemList.filter(({ country_name }) => {
+      const item = country_name.toLowerCase();
 
       return item.includes(search);
     });
@@ -35,30 +39,26 @@ export const SearchModal = ({
     setSearchList(findItem);
   };
 
+  const handleSelect = (item: CountryCode) => {
+    onClick(item);
+    onCancel();
+  };
+
   return (
     <ModalOverlay open={open} handleClick={onCancel}>
-      <div>
-        <input
-          className={styles.search}
-          placeholder="Search"
-          onChange={handleOnChange}
-          // value={search}
-        />
-        <ul className={styles.ul}>
-          {searchList.map((name, i) => (
-            <li
-              key={i}
-              className={styles.li}
-              onClick={() => {
-                onClick(name);
-                onCancel();
-              }}
-            >
-              {name}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <input
+        className={styles.search}
+        placeholder="Search"
+        name="search"
+        onChange={handleOnChange}
+      />
+      <ul className={styles.ul}>
+        {searchList.map((item, i) => (
+          <li key={i} className={styles.li} onClick={() => handleSelect(item)}>
+            {item.country_name}
+          </li>
+        ))}
+      </ul>
     </ModalOverlay>
   );
 };

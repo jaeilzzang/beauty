@@ -1,6 +1,11 @@
 import Image from "next/image";
 
 import styles from "./floating.module.scss";
+import { TellIcon } from "@/components/icons/tell";
+import { BlogIcon } from "@/components/icons/blog";
+import { SkillIconsInstagram } from "@/components/icons/instagram";
+import { TikTokIcon } from "@/components/icons/tiktok";
+import { YoutubeIcon } from "@/components/icons/youtube";
 
 export type FloatItem = {
   name: string;
@@ -11,20 +16,23 @@ export interface FloatingProps {
 }
 
 const Floating = ({ float }: FloatingProps) => {
+  // 이미지 파일이 없어서 임시로 svg 컴포넌트 생성
+  const icon: Record<string, JSX.Element> = {
+    instagram: <SkillIconsInstagram />,
+    tel: <TellIcon />,
+    blog: <BlogIcon />,
+    ticktok: <TikTokIcon />,
+    youtube: <YoutubeIcon />,
+    homepage: <YoutubeIcon />,
+  };
+
   return (
     <div className={styles.floating}>
       {float.map(({ name, href }) => {
         return (
           // target="_blank" 새창열기
           <a key={name} href={href} target="_blank" rel="noopener noreferrer">
-            <Image
-              // 확장자 png, svg 나뉜걸 통일
-              // 이미지 파일 이름도 네이밍과 통일
-              src={`/icons/icon_sns_${name}.png`}
-              alt={name}
-              width={24}
-              height={24}
-            />
+            {icon[name]}
           </a>
         );
       })}

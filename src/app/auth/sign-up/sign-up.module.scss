@@ -1,3 +1,36 @@
+.main {
+  display: inline-flex;
+  width: 100%;
+
+  max-width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto;
+
+  // height: 100vh;
+
+  @media screen and (min-width: 676px) {
+    width: 50%;
+  }
+}
+
+.title {
+  margin-block: 3rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.form {
+  width: 100%;
+}
+
+.btn {
+  margin-top: 2rem;
+  width: 100%;
+}
+
 .rollback {
   cursor: pointer;
 
@@ -8,8 +41,11 @@
   font-weight: 200;
 
   text-align: center;
+
+  justify-content: center;
 }
 
 .input_field {
-  margin: 1rem 0;
+  width: 100%;
+  margin: 0.5rem 0;
 }

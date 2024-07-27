@@ -22,7 +22,10 @@ export async function POST(req: Request) {
     return Response.json({ user: data[0] }, { status, statusText });
   } catch (error) {
     if (error instanceof Error) {
-      return Response.json({ status: 500, statusText: error.message });
+      return Response.json(
+        { user: null },
+        { status: 500, statusText: error.message }
+      );
     }
   }
 }

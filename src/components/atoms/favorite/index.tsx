@@ -2,35 +2,47 @@
 
 import Image from "next/image";
 import styles from "./favorite.module.scss";
-import { useMutation } from "@tanstack/react-query";
-import { deleteFavoriteAPI, postFavoriteAPI } from "@/app/api/auth/favorite";
-import { useParams, useRouter } from "next/navigation";
+
+import { useParams } from "next/navigation";
+import { useOptimistic } from "react";
+import { favoriteActions } from "./actions";
 
 export interface FavoriteIconProps {
-  isFavorite?: boolean;
+  isFavorite: boolean;
 }
 
 export const HospitalFavoriteIcon = ({ isFavorite }: FavoriteIconProps) => {
-  const router = useRouter();
   const params: { id: string } = useParams();
   const id_hospital = params.id;
 
-  const { mutate } = useMutation({
-    mutationFn: isFavorite ? deleteFavoriteAPI : postFavoriteAPI,
-    onSuccess: () => {
-      router.refresh();
-    },
-  });
+  const [optimisticState, isOptimisticFavorite] = useOptimistic(
+    isFavorite,
+    (prevState) => {
+      return !prevState;
+    }
+  );
 
-  if (isFavorite === undefined) return null;
+  const updateFavorite = async () => {
+    isOptimisticFavorite(isFavorite);
+
+    await favoriteActions({
+      isFavorite: optimisticState,
+      id_hospital,
+    });
+  };
 
   return (
-    <Image
-      src={`/icons/icon_favorite_${isFavorite ? "disable" : "enable"}.svg`}
-      alt="favorite"
-      width={24}
-      height={24}
-      onClick={() => mutate({ id_hospital })}
-    />
+    <form action={updateFavorite}>
+      <button className={styles.btn}>
+        <Image
+          src={`/icons/icon_favorite_${
+            optimisticState ? "disable" : "enable"
+          }.svg`}
+          alt="favorite"
+          width={24}
+          height={24}
+        />
+      </button>
+    </form>
   );
 };

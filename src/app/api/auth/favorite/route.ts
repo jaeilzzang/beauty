@@ -1,18 +1,18 @@
 import { createClient } from "@/utils/supabase/server";
+
 import { LIMIT } from "./constant";
 import { infinityParams } from "@/utils/inifinityQuery";
 
 import { NextRequest, NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
 
 export async function GET(req: Request) {
   const supabase = createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
     const { limit, offset, nextCursor } = infinityParams({
       req,
       limits: LIMIT,
@@ -51,19 +51,15 @@ export async function POST(req: NextRequest) {
   const supabase = createClient();
   const body = await req.json();
 
-  const path = req.nextUrl.searchParams.get("path") as string;
-
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const { id_hospital, uuid } = body;
 
-    const { id_hospital } = body;
+    if (!uuid) throw Error("not Found User");
 
     const { data, error, statusText } = await supabase
       .from("favorite")
       .select("*")
-      .eq("uuid", user?.id)
+      .eq("uuid", uuid)
       .eq("id_hospital", id_hospital);
 
     if (error) {
@@ -76,13 +72,11 @@ export async function POST(req: NextRequest) {
 
     const createFavorite = await supabase
       .from("favorite")
-      .insert([{ uuid: user?.id, id_hospital }]);
+      .insert([{ uuid, id_hospital }]);
 
     if (createFavorite.error) {
       throw Error(createFavorite.statusText);
     }
-
-    revalidatePath(path);
 
     return NextResponse.json(data, {
       status: createFavorite.status,
@@ -102,22 +96,16 @@ export async function DELETE(req: NextRequest) {
   const supabase = createClient();
   const body = await req.json();
 
-  const path = req.nextUrl.searchParams.get("path") as string;
-
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const { id_hospital } = body;
+    const { id_hospital, uuid } = body;
 
     const parseId = JSON.parse(id_hospital);
 
-    if (!user) throw Error("not Found User");
+    if (!uuid) throw Error("not Found User");
 
-    let query = supabase.from("favorite").delete().eq("uuid", user?.id);
+    let query = supabase.from("favorite").delete().eq("uuid", uuid);
 
-    if (parseId instanceof Array) {
+    if (Array.isArray(parseId)) {
       query.in("id_hospital", parseId);
     } else {
       query.eq("id_hospital", parseId);
@@ -125,9 +113,12 @@ export async function DELETE(req: NextRequest) {
 
     const { data, error, status, statusText } = await query.select("*");
 
-    if (!error) {
-      revalidatePath(path);
+    if (error) {
       return NextResponse.json(data, { status, statusText });
+    }
+
+    if (!data.length) {
+      return NextResponse.json({ error: "No rows deleted" }, { status: 404 });
     }
 
     return NextResponse.json(data, {

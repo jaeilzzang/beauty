@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./policy.module.scss";
+import styles from "./styles/signup.module.scss";
 
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
@@ -14,7 +14,7 @@ const SignUpButton = () => {
   const { handleOpenModal, open } = useModal();
 
   const handleConfirm = () => {
-    router.push(ROUTE.EMAIL_VERIFICATION);
+    router.push(ROUTE.SIGN_UP);
   };
 
   return (

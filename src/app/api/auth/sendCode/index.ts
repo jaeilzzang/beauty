@@ -1,6 +1,6 @@
 import { fetchUtils } from "@/utils/fetch";
 
-export const sendCodeMutationFn = async ({
+export const sendCodeAPI = async ({
   email,
 }: {
   email: string;

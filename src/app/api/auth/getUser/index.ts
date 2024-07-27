@@ -2,7 +2,7 @@ import { fetchUtils } from "@/utils/fetch";
 import { UserOutputDto } from "./getUser.dto";
 import { createClient } from "@/utils/supabase/server";
 
-export const getUserAPI = async (): Promise<UserOutputDto> => {
+export const getUserAPI = async (): Promise<UserOutputDto | null> => {
   const supabase = createClient();
 
   const {
@@ -10,7 +10,7 @@ export const getUserAPI = async (): Promise<UserOutputDto> => {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    throw Error("not Found User");
+    return null;
   }
 
   const payload = JSON.stringify({ email: user.email });

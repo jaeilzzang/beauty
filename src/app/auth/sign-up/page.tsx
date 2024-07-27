@@ -1,112 +1,137 @@
 "use client";
 
-import { useState } from "react";
-
 import styles from "./sign-up.module.scss";
 
 import InputField from "@/components/molecules/form/input-field";
-import Button from "@/components/atoms/button";
-import { useRouter } from "next/navigation";
+
 import { ROUTE } from "@/router";
 
-import { SearchModal } from "@/components/template/modal";
-import useModal from "@/hooks/useModal";
 import signUpActions from "./actions/sign-up.action";
+
+import Link from "next/link";
+import { NationModal } from "./components/modal/nations";
+
+import SignUpButton from "./components/button/sign-up";
+import { useFormState } from "react-dom";
+import { ChangeEvent, useEffect, useState } from "react";
+import { emailRegExp, passwordRegExp } from "@/utils/regexp";
 import { AlertModal } from "@/components/template/modal/alert";
-import { ErrorMessage } from "@/components/atoms/message/error";
-import { useFormAction } from "@/hooks/useFormAction";
-import { supabaseClient } from "@/utils/supabase/client";
-import { country } from "@/constants/country";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import LoadingSpinner from "@/components/atoms/loading/spinner";
+
+import useModal from "@/hooks/useModal";
+
+type InputKey = "email" | "password" | "password_confirm" | "name" | "nickname";
+
+type State = {
+  [key in InputKey]: { value: string; error: boolean };
+};
 
 const SignUpPage = () => {
-  const router = useRouter();
+  const [state, formAction] = useFormState(signUpActions, { message: null });
 
   const { handleOpenModal, open } = useModal();
 
-  const [nationality, setNationality] = useState<string>("");
-
-  const { errorMessage, formAction, formStatus, isError, state } =
-    useFormAction({ action: signUpActions });
-
-  const getUser = async () => {
-    const { data } = await supabaseClient.auth.getSession();
-
-    if (!data.session) {
-      // redirect(ROUTE.LOGIN);
-    }
-
-    return data;
-  };
-
-  const isUserCheck = useSuspenseQuery({
-    queryKey: ["email_check"],
-    queryFn: getUser,
+  const [input, setInput] = useState<State>({
+    email: {
+      error: false,
+      value: "",
+    },
+    name: {
+      error: false,
+      value: "",
+    },
+    nickname: {
+      error: false,
+      value: "",
+    },
+    password: {
+      error: false,
+      value: "",
+    },
+    password_confirm: {
+      error: false,
+      value: "",
+    },
   });
 
-  const onReset = () => router.replace(ROUTE.LOGIN);
-
-  const inputFields = [
+  const inputFields: { label: string; name: InputKey }[] = [
     { label: "Email", name: "email" },
     { label: "Password", name: "password" },
     { label: "Password Confirm", name: "password_confirm" },
     { label: "Name", name: "name" },
     { label: "Nickname", name: "nickname" },
-    {
-      label: "Nationality",
-      name: "nationality",
-      readOnly: true,
-      value: nationality,
-      onClick: handleOpenModal,
-      onFocus: handleOpenModal,
-    },
   ];
 
-  if (isUserCheck.isLoading) return <LoadingSpinner backdrop />;
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    const regValid = (name: InputKey, value: string) => {
+      const reg: Record<Exclude<InputKey, "name" | "nickname">, RegExp> = {
+        email: emailRegExp,
+        password: passwordRegExp,
+        password_confirm: passwordRegExp,
+      };
+
+      if (name === "password_confirm") {
+        return !reg[name].test(value) || input["password"].value !== value;
+      } else if (name === "nickname" || name === "name") {
+        return false;
+      }
+
+      return !reg[name].test(value);
+    };
+
+    const inputKey = name as InputKey;
+
+    setInput((prev) => ({
+      ...prev,
+      [inputKey]: {
+        ...prev[inputKey],
+        value,
+        error: regValid(inputKey, value),
+      },
+    }));
+  };
+
+  const disabled = Object.values(input).every((e) => !e.error && e.value);
+
+  useEffect(() => {
+    if (state.message) {
+      handleOpenModal();
+    }
+  }, [state]);
 
   return (
-    <main className="container">
-      <form action={formAction}>
-        {inputFields.map(
-          ({ label, name, onClick, onFocus, readOnly, value }) => (
-            <div key={name} className={styles.input_field}>
-              <InputField
-                label={label}
-                name={name}
-                type={name.startsWith("password") ? "password" : "text"}
-                {...(readOnly && { readOnly })}
-                {...(value && { value })}
-                onClick={onClick}
-                onFocus={onFocus}
-                isError={!!state.error[name]}
-              />
-              {<ErrorMessage message={state.error[name]} />}
-            </div>
-          )
-        )}
+    <main className={styles.main}>
+      <h1 className={styles.title}>Sign Up</h1>
+      <form className={styles.form} action={formAction}>
+        {inputFields.map(({ label, name }) => (
+          <div key={name} className={styles.input_field}>
+            <InputField
+              label={label}
+              name={name}
+              type={name.startsWith("password") ? "password" : "text"}
+              onChange={handleChange}
+              value={input[name]?.value}
+              isError={input[name]?.error}
+            />
+          </div>
+        ))}
 
-        <p className={styles.rollback} onClick={onReset}>
+        <div className={styles.input_field}>
+          <NationModal />
+        </div>
+
+        <div className={styles.btn}>
+          <SignUpButton disabled={disabled} />
+        </div>
+
+        <Link className={styles.rollback} href={ROUTE.LOGIN}>
           Already have an account? Log in
-        </p>
-
-        <Button fullWidth disabled={formStatus.pending} color="blue">
-          SIGN UP
-        </Button>
+        </Link>
       </form>
 
-      <SearchModal
-        onCancel={handleOpenModal}
-        onClick={(value) => setNationality(value)}
-        itemList={country}
-        open={open}
-      />
-
-      <AlertModal
-        open={!!isError}
-        onCancel={() => router.replace(ROUTE.SIGN_UP)}
-      >
-        <p>{errorMessage}</p>
+      <AlertModal open={open} onCancel={handleOpenModal}>
+        <p>{state?.message}</p>
       </AlertModal>
     </main>
   );

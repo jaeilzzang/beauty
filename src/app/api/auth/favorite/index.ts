@@ -13,6 +13,9 @@ export const getAllFavoriteAPI = async ({
 }: InfinityScrollInputDto) => {
   const res = await fetchUtils<GetFavoriteOutputDto>({
     url: `http://localhost:3000/api/auth/favorite?&pageParam=${pageParam}`,
+    fetchOptions: {
+      cache: "no-cache",
+    },
   });
 
   return res;
@@ -36,17 +39,12 @@ export const getFavoriteAPI = async ({
 
 export const postFavoriteAPI = async ({
   id_hospital,
+  uuid,
 }: PostFavoriteInputDto) => {
-  const queryParams = new URLSearchParams({});
-
-  if (window.location.pathname) {
-    queryParams.append("path", window.location.pathname);
-  }
-
-  const body = JSON.stringify({ id_hospital });
+  const body = JSON.stringify({ id_hospital, uuid });
 
   const res = await fetchUtils<{ redirect: string }>({
-    url: `http://localhost:3000/api/auth/favorite?${queryParams.toString()}`,
+    url: `http://localhost:3000/api/auth/favorite`,
     fetchOptions: {
       method: "POST",
       body,
@@ -58,17 +56,12 @@ export const postFavoriteAPI = async ({
 
 export const deleteFavoriteAPI = async ({
   id_hospital,
+  uuid,
 }: DeleteFavoriteInputDto) => {
-  const queryParams = new URLSearchParams({});
+  const body = JSON.stringify({ id_hospital, uuid });
 
-  if (window.location.pathname) {
-    queryParams.append("path", window.location.pathname);
-  }
-
-  const body = JSON.stringify({ id_hospital });
-
-  const res = await fetchUtils<{ redirect: string }>({
-    url: `http://localhost:3000/api/auth/favorite?${queryParams.toString()}`,
+  const res = await fetchUtils({
+    url: `http://localhost:3000/api/auth/favorite`,
     fetchOptions: {
       method: "DELETE",
       body,

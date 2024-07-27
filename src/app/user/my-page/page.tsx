@@ -1,16 +1,17 @@
 import { getUserAPI } from "@/app/api/auth/getUser";
 import LogoutBtn from "@/components/molecules/logout";
 
+import styles from "./my-page.module.scss";
 import { notFound } from "next/navigation";
 
 const MyPage = async () => {
-  const { user } = await getUserAPI();
+  const users = await getUserAPI();
 
-  if (!user) notFound();
+  if (!users) notFound();
 
   return (
-    <main className="container">
-      <div>{user.nickname}</div>
+    <main className={styles.mypage}>
+      <div>{users.user.nickname}</div>
       <br />
       <div>
         <LogoutBtn />

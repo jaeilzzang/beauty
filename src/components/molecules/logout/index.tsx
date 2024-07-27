@@ -1,25 +1,26 @@
-"use client";
-
 import Button from "@/components/atoms/button";
+import { ROUTE } from "@/router";
 
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-const LogoutBtn = () => {
-  const router = useRouter();
+const LogoutBtn = async () => {
+  const handleLogout = async () => {
+    "use server";
+    const supabase = createClient();
+    await supabase.auth.signOut();
+
+    revalidatePath("/", "layout");
+    redirect(ROUTE.HOME);
+  };
 
   return (
-    <Button
-      color="red"
-      variant="outline"
-      onClick={async () => {
-        const supabase = createClient();
-        await supabase.auth.signOut();
-        router.refresh();
-      }}
-    >
-      LOGOUT
-    </Button>
+    <form action={handleLogout}>
+      <Button color="red" variant="outline">
+        LOGOUT
+      </Button>
+    </form>
   );
 };
 

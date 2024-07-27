@@ -8,7 +8,7 @@ export async function GET(req: Request) {
 
   const { data = [], count } = await supabase
     .from("hospital")
-    .select("id, imageurls, name, location, id_unique", { count: "exact" })
+    .select("imageurls, name, location, id_unique", { count: "exact" })
     .match({ location: locationNum })
     .limit(9);
 

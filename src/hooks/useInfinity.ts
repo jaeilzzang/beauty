@@ -25,13 +25,14 @@ export const useInfinity = <T extends InfinityScrollOutputDto>({
     queryKey,
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) => fetchFn(pageParam),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.nextCursor ? allPages.length : undefined;
-    },
+    getNextPageParam: (lastPage, allPages) =>
+      lastPage.nextCursor ? allPages.length : undefined,
     retry: 0,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    networkMode: "always",
   });
 
   const options: IntersectionObserverInit = {

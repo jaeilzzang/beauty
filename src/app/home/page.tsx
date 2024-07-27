@@ -12,8 +12,6 @@ import { getBannerAPI } from "@/app/api/home/banner";
 import Beauty from "./components/beauty";
 
 import LocationHospital from "./components/location";
-import { Suspense } from "react";
-import LoadingSpinner from "@/components/atoms/loading/spinner";
 
 export default async function Home({
   searchParams,
@@ -51,6 +49,7 @@ export default async function Home({
           <h2 className={styles.title}>New Beauty</h2>
           <p>Make Attraction</p>
         </div>
+
         <Beauty />
       </section>
 

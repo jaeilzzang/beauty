@@ -26,8 +26,6 @@ export async function POST(req: Request) {
       .select("uuid,email,email_verify")
       .match({ email });
 
-    console.log(findUser, "findUser");
-
     if (!findUser.data || !findUser.data[0].uuid) {
       throw Error("Not Found User");
     }

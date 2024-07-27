@@ -11,7 +11,6 @@ export const getHospitalInfoAPI = async ({
 
   const data = await fetchUtils<HospitalDetailInfoOutDto>({
     url,
-    fetchOptions: { cache: "no-cache" },
   });
 
   return data ?? [];
