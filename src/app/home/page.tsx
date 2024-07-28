@@ -22,12 +22,8 @@ export default async function Home({
   const renderLocalChip = () => {
     return (
       <div className={styles.location_wrapper}>
-        {location.map((name) => (
-          <Link
-            key={name}
-            href={ROUTE.LOCATION_DETAIL("") + name}
-            scroll={false}
-          >
+        {location.map((name, i) => (
+          <Link key={name} href={`/home?locationNum=${i}`} scroll={false}>
             <Chip>{name}</Chip>
           </Link>
         ))}
