@@ -1,5 +1,3 @@
-import { Banner } from "@/components/organism/layout/banner";
-
 import Link from "next/link";
 
 import styles from "./home.module.scss";
@@ -12,6 +10,7 @@ import { getBannerAPI } from "@/app/api/home/banner";
 import Beauty from "./components/beauty";
 
 import LocationHospital from "./components/location";
+import { Banner } from "@/components/organism/layout/banner";
 
 export default async function Home({
   searchParams,
