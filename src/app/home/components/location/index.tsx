@@ -1,4 +1,4 @@
-import styles from "./Beauty.module.scss";
+import styles from "./beauty.module.scss";
 import Link from "next/link";
 import ThumbnailImg from "@/components/molecules/img/thumbnail";
 import { getHospitalLocationAPI } from "../../../api/home/hospital";
