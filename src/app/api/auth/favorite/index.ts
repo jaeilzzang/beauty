@@ -12,7 +12,7 @@ export const getAllFavoriteAPI = async ({
   pageParam = 0,
 }: InfinityScrollInputDto) => {
   const res = await fetchUtils<GetFavoriteOutputDto>({
-    url: `http://localhost:3000/api/auth/favorite?&pageParam=${pageParam}`,
+    url: `${process.env.NEXT_PUBLIC_API_ROUTE}/api/auth/favorite?&pageParam=${pageParam}`,
     fetchOptions: {
       cache: "no-cache",
     },
@@ -31,7 +31,9 @@ export const getFavoriteAPI = async ({
   }
 
   const res = await fetchUtils<GetFavoriteOutputDto[]>({
-    url: `http://localhost:3000/api/auth/favorite?${queryParams.toString()}`,
+    url: `${
+      process.env.NEXT_PUBLIC_API_ROUTE
+    }/api/auth/favorite?${queryParams.toString()}`,
   });
 
   return res;
@@ -44,7 +46,7 @@ export const postFavoriteAPI = async ({
   const body = JSON.stringify({ id_hospital, uuid });
 
   const res = await fetchUtils<{ redirect: string }>({
-    url: `http://localhost:3000/api/auth/favorite`,
+    url: `${process.env.NEXT_PUBLIC_API_ROUTE}/api/auth/favorite`,
     fetchOptions: {
       method: "POST",
       body,
@@ -61,7 +63,7 @@ export const deleteFavoriteAPI = async ({
   const body = JSON.stringify({ id_hospital, uuid });
 
   const res = await fetchUtils({
-    url: `http://localhost:3000/api/auth/favorite`,
+    url: `${process.env.NEXT_PUBLIC_API_ROUTE}/api/auth/favorite`,
     fetchOptions: {
       method: "DELETE",
       body,

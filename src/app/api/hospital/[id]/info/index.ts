@@ -7,7 +7,7 @@ import {
 export const getHospitalInfoAPI = async ({
   id,
 }: HospitalDetailInfoInputDto): Promise<HospitalDetailInfoOutDto> => {
-  const url = `http://localhost:3000/api/hospital/${id}/info`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/hospital/${id}/info`;
 
   const data = await fetchUtils<HospitalDetailInfoOutDto>({
     url,

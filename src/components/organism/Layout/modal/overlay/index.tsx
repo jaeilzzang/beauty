@@ -14,7 +14,7 @@ interface ModalOverlayProps {
   type?: "alert" | "overlay";
 }
 
-const ModalOverlay = ({
+export const ModalOverlay = ({
   children,
   open,
   handleClick,
@@ -60,5 +60,3 @@ const ModalOverlay = ({
     </Portal>
   );
 };
-
-export default ModalOverlay;

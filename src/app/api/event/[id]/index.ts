@@ -4,7 +4,7 @@ import { EventDetailInputDto, EventDetailOutput } from "./event.dto";
 export const getEventDetailAPI = async ({
   id,
 }: EventDetailInputDto): Promise<EventDetailOutput> => {
-  const url = `http://localhost:3000/api/event/${id}`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/event/${id}`;
 
   const data = await fetchUtils<EventDetailOutput>({
     url,

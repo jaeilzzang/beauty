@@ -1,7 +1,7 @@
 "use client";
 
 import InputField from "@/components/molecules/form/input-field";
-import ModalOverlay from "@/components/organism/layout/modal/overlay";
+import { ModalOverlay } from "@/components/organism/layout/modal/overlay";
 
 import styles from "./surgeries-modal.module.scss";
 

@@ -13,7 +13,7 @@ export const verifyCodeAPI = async ({
   });
 
   const res = await fetchUtils<Response>({
-    url: `http://localhost:3000/api/auth/verifyCode`,
+    url: `${process.env.NEXT_PUBLIC_API_ROUTE}/api/auth/verifyCode`,
     fetchOptions: {
       method: "POST",
       body,

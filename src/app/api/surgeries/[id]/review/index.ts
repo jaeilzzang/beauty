@@ -8,7 +8,7 @@ export const getSurgeriesReviewAPI = async ({
   id,
   pageParam,
 }: SurgeriesReviewInputDto): Promise<SurgeriesReviewOutputDto> => {
-  const url = `http://localhost:3000/api/surgeries/${id}/review?pageParam=${pageParam}`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/surgeries/${id}/review?pageParam=${pageParam}`;
 
   const data = await fetchUtils<SurgeriesReviewOutputDto>({
     url,

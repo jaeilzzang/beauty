@@ -1,6 +1,6 @@
 "use client";
 
-import ModalOverlay from "@/components/organism/layout/modal/overlay";
+import { ModalOverlay } from "@/components/organism/layout/modal/overlay";
 
 import styles from "./search-modal.module.scss";
 import { ChangeEventHandler, useState } from "react";

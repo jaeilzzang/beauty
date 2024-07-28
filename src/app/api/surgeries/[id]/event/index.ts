@@ -8,7 +8,7 @@ export const getSurgeriesEventAPI = async ({
   id,
   pageParam,
 }: SurgeriesEventInputDto): Promise<SurgeriesEventOutputDto> => {
-  const url = `http://localhost:3000/api/surgeries/${id}/event?pageParam=${pageParam}`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/surgeries/${id}/event?pageParam=${pageParam}`;
 
   const data = await fetchUtils<SurgeriesEventOutputDto>({
     url,

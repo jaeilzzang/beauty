@@ -4,7 +4,7 @@ import { PropsWithChildren } from "react";
 
 import styles from "./alert-modal.module.scss";
 import Button from "@/components/atoms/button";
-import ModalOverlay from "@/components/organism/layout/modal/overlay";
+import { ModalOverlay } from "@/components/organism/layout/modal/overlay";
 
 interface AlertModalProps {
   open: boolean;

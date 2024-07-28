@@ -4,13 +4,10 @@ import {
   HospitalLocationOutputDto,
 } from "./hospital-location.dto";
 
-//todo paging
 export const getHospitalLocationAPI = async ({
   locationNum = "0",
 }: HospitalLocationInputDto) => {
-  const url =
-    "http://localhost:3000/api/home/hospital/location" +
-    `?locationNum=${locationNum}`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/home/hospital/location?locationNum=${locationNum}`;
 
   const data = await fetchUtils<HospitalLocationOutputDto>({
     url,

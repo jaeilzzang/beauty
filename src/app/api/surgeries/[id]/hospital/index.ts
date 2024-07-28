@@ -8,7 +8,7 @@ export const getSurgeriesHospitalAPI = async ({
   id,
   pageParam,
 }: SurgeriesHospitalInputDto): Promise<SurgeriesHospitalOutputDto> => {
-  const url = `http://localhost:3000/api/surgeries/${id}/hospital?pageParam=${pageParam}`;
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/surgeries/${id}/hospital?pageParam=${pageParam}`;
 
   const data = await fetchUtils<SurgeriesHospitalOutputDto>({
     url,
