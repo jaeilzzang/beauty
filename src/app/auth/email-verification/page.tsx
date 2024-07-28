@@ -10,7 +10,7 @@ import InputField from "@/components/molecules/form/input-field";
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-import useTimer from "@/hooks/useTimer";
+import { useTimer } from "@/hooks/useTimer";
 
 import VerifyButton from "./verifyButton";
 import verifyActions from "./actions/email-verification.actions";

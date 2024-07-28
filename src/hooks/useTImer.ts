@@ -7,7 +7,7 @@ interface useTimerProps {
   timeOver: boolean;
 }
 
-const useTimer = ({ setTimeOver, timeOver, time }: useTimerProps) => {
+export const useTimer = ({ setTimeOver, timeOver, time }: useTimerProps) => {
   const timeRef = useRef<number>(time);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -65,5 +65,3 @@ const useTimer = ({ setTimeOver, timeOver, time }: useTimerProps) => {
     startTimer,
   };
 };
-
-export default useTimer;
