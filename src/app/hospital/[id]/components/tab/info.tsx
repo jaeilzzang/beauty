@@ -33,9 +33,8 @@ const InfoDataList: {
 ];
 
 const InfoTab = async ({ id }: InfoTabProps) => {
-  const { data } = await getHospitalInfoAPI({ id });
+  const { data: infoData } = await getHospitalInfoAPI({ id });
 
-  const infoData = data[0];
   const infoDetailData = infoData.hospital_details;
 
   const renderContent = ({ title, content }: TContent) => {

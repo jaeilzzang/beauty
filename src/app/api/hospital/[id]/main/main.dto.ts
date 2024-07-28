@@ -25,5 +25,5 @@ export interface Hospital {
 }
 
 export interface HospitalDetailMainOutput {
-  data: Hospital[];
+  data: Hospital;
 }

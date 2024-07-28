@@ -11,7 +11,7 @@ const MyPage = async () => {
 
   return (
     <main className={styles.mypage}>
-      <div>{users.user.nickname}</div>
+      <div>{users.user.user_metadata.full_name}</div>
       <br />
       <div>
         <LogoutBtn />

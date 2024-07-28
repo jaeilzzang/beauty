@@ -12,6 +12,10 @@ const nextConfig = {
         hostname: "afsfroagcvtulsttshvc.supabase.co",
         protocol: "https",
       },
+      {
+        hostname: "tqyarvckzieoraneohvv.supabase.co",
+        protocol: "https",
+      },
     ],
   },
   sassOptions: {

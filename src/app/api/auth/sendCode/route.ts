@@ -27,6 +27,7 @@ export async function GET(req: Request) {
     }
 
     const { data, error } = await supabase.auth.signInWithOtp({ email });
+    // console.log(data, error, "error");
 
     if (error) {
       return Response.json({ status: error.status, statusText: error.code });

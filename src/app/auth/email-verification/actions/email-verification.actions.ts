@@ -29,7 +29,7 @@ const verifyActions = async (prevState: any, formData: FormData) => {
   if (verifyCode.error) {
     return {
       ...prevState,
-      message: verifyCode.error.code,
+      message: verifyCode.error.code as string,
     };
   }
 
@@ -46,8 +46,7 @@ const verifyActions = async (prevState: any, formData: FormData) => {
     if (requireKey.includes(key)) insertDb[key] = userInfo[key];
   }
 
-  console.log(verifyCode, insertDb, "verifyCodeverifyCodeverifyCode");
-
+  // user 테이블 insert
   const saveUserProfile = await supabase.from("user").insert({
     ...insertDb,
     id_country: countryCode,
@@ -56,7 +55,11 @@ const verifyActions = async (prevState: any, formData: FormData) => {
 
   console.log(saveUserProfile);
 
-  // redirect(ROUTE.EMAIL_VERIFICATION);
+  if (saveUserProfile.error) {
+    return { ...prevState, message: saveUserProfile.error.code };
+  }
+
+  // redirect(ROUTE.HOME);
 };
 
 export default verifyActions;

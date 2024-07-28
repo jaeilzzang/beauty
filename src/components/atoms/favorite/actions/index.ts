@@ -18,8 +18,6 @@ export const favoriteActions = async ({
   const supabase = createClient();
   const referer = headers().get("referer") as string;
 
-  console.log(referer, "referer");
-
   const {
     data: { user },
   } = await supabase.auth.getUser();

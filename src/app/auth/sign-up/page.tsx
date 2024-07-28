@@ -17,8 +17,6 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { emailRegExp, passwordRegExp } from "@/utils/regexp";
 import { AlertModal } from "@/components/template/modal/alert";
 
-import useModal from "@/hooks/useModal";
-
 type InputKey = "email" | "password" | "password_confirm" | "name" | "nickname";
 
 type State = {
@@ -26,9 +24,12 @@ type State = {
 };
 
 const SignUpPage = () => {
-  const [state, formAction] = useFormState(signUpActions, { message: null });
+  const [state, formAction] = useFormState<
+    { message: string | null },
+    FormData
+  >(signUpActions, { message: null });
 
-  const { handleOpenModal, open } = useModal();
+  const [message, setMessage] = useState<string | null>(null);
 
   const [input, setInput] = useState<State>({
     email: {
@@ -96,7 +97,7 @@ const SignUpPage = () => {
 
   useEffect(() => {
     if (state.message) {
-      handleOpenModal();
+      setMessage(state.message);
     }
   }, [state]);
 
@@ -130,7 +131,7 @@ const SignUpPage = () => {
         </Link>
       </form>
 
-      <AlertModal open={open} onCancel={handleOpenModal}>
+      <AlertModal open={!!message} onCancel={() => setMessage(null)}>
         <p>{state?.message}</p>
       </AlertModal>
     </main>

@@ -10,6 +10,7 @@ export type TSnsType = Extract<Provider, "facebook" | "google" | "apple">;
 
 export const snsLoginActions = async (prevState: any, snsType: TSnsType) => {
   const referer = headers().get("referer") as string;
+  const host = headers().get("host");
 
   const supabase = createClient();
 
@@ -22,7 +23,11 @@ export const snsLoginActions = async (prevState: any, snsType: TSnsType) => {
   const { error, data } = await supabase.auth.signInWithOAuth({
     provider: snsType,
     options: {
-      redirectTo: redirectTo[snsType],
+      redirectTo: process.env.NEXT_PUBLIC_API_ROUTE + "/auth/callback",
+      queryParams: {
+        access_type: "offline",
+        prompt: "consent",
+      },
     },
   });
 

@@ -23,7 +23,7 @@ const HospitalDetailPage = async ({
 
   const { data } = await getHospitalMainAPI({ id: params?.id });
 
-  const getFloatList = Object.entries(data[0].hospital_details).reduce<
+  const getFloatList = Object.entries(data.hospital_details).reduce<
     FloatItem[]
   >((acc, [key, value]) => {
     if (typeof value === "string" && Boolean(value)) {
@@ -35,12 +35,12 @@ const HospitalDetailPage = async ({
 
   return (
     <main>
-      <PageHeader name={data[0].name}>
-        <HospitalFavoriteIcon isFavorite={!!data[0].favorite.length} />
+      <PageHeader name={data.name}>
+        <HospitalFavoriteIcon isFavorite={!!data.favorite.length} />
       </PageHeader>
       <div className={styles.main}>
         <div className={styles.thumbnail_box}>
-          <Image fill src={data[0].imageurls[0]} alt={data[0].name} />
+          <Image fill src={data.imageurls[0]} alt={data.name} />
         </div>
 
         {/* tab */}

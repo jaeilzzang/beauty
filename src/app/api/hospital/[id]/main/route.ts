@@ -12,29 +12,44 @@ export async function GET(
     const { data, error, status, statusText } = await supabase
       .from("hospital")
       .select(
-        `imageurls,
+        `id_unique,
+         imageurls,
          name,
-         favorite: favorite ("*"),
-         hospital_details: hospital_details!hospital_id_unique_fkey (
-            tel,
-            homepage,
-            kakaotalk,
-            facebook,
-            instagram,
-            blog,
-            youtube,
-            ticktok,
-            snapchat
-        )
+         favorite: favorite ("*")
         `
       )
       .match({ id_unique });
 
-    if (error) {
+    const { data: detailData, error: detailError } = await supabase
+      .from("hospital_details")
+      .select(
+        `
+        tel,
+        homepage,
+        kakaotalk,
+        facebook,
+        instagram,
+        blog,
+        youtube,
+        ticktok,
+        snapchat
+        `
+      )
+      .match({ id_hospital: id_unique });
+
+    if (error || detailError) {
       return Response.json({ data: null }, { status, statusText });
     }
 
-    return Response.json({ data }, { status: 200, statusText: "success" });
+    return Response.json(
+      {
+        data: {
+          ...data[0],
+          hospital_details: detailData[0],
+        },
+      },
+      { status: 200, statusText: "success" }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return Response.json(

@@ -11,25 +11,39 @@ export async function GET(
     const { data, error, status, statusText } = await supabase
       .from("hospital")
       .select(
-        `id_unique, name, latitude, longitude,
-          hospital_details: hospital_details!hospital_id_unique_fkey (
-          map,
-          desc_address,
-          desc_openninghour,
-          desc_facilities,
-          desc_doctors_imgurls,
-          id_hospital,
-          etc
-        )
+        `id_unique, name, latitude, longitude
         `
       )
       .match({ id_unique });
 
-    if (error) {
+    const { data: detailData, error: detailError } = await supabase
+      .from("hospital_details")
+      .select(
+        `
+        map,
+        desc_address,
+        desc_openninghour,
+        desc_facilities,
+        desc_doctors_imgurls,
+        id_hospital,
+        etc
+        `
+      )
+      .match({ id_hospital: id_unique });
+
+    if (error || detailError) {
       return Response.json({ data: null }, { status, statusText });
     }
 
-    return Response.json({ data }, { status: 200, statusText: "success" });
+    return Response.json(
+      {
+        data: {
+          ...data[0],
+          hospital_details: detailData[0],
+        },
+      },
+      { status: 200, statusText: "success" }
+    );
   } catch (error) {
     if (error instanceof Error) {
       return Response.json(

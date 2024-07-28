@@ -11,7 +11,7 @@ const Auth = async () => {
   const users = await getUserAPI();
 
   const href = users ? ROUTE.MY_PAGE : ROUTE.LOGIN;
-  const text = users ? users.user.nickname : "LOGIN";
+  const text = users ? users.user.user_metadata.full_name || "" : "LOGIN";
 
   return (
     <div className={styles.auth_header}>

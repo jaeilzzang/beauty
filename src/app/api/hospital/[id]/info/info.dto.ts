@@ -7,21 +7,20 @@ export interface HospitalInfo {
   name: string;
   latitude: number;
   longitude: number;
+  hospital_details: HospitalDetailInfo;
 }
 
 export interface HospitalDetailInfo {
-  hospital_details: {
-    map: string;
-    tel: string;
-    desc_address: string;
-    desc_openninghour: string;
-    desc_facilities: string;
-    desc_doctors_imgurls: string[];
-    id_hospital: number;
-    etc: string;
-  };
+  map: string;
+  tel: string;
+  desc_address: string;
+  desc_openninghour: string;
+  desc_facilities: string;
+  desc_doctors_imgurls: string[];
+  id_hospital: number;
+  etc: string;
 }
 
 export interface HospitalDetailInfoOutDto {
-  data: Array<HospitalInfo & HospitalDetailInfo>;
+  data: HospitalInfo;
 }
