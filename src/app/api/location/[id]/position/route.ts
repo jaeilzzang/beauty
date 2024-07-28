@@ -12,17 +12,35 @@ export async function GET(
   });
 
   try {
-    const { data, error, status, statusText } = await supabase
-      .from("hospital")
-      .select(
-        `id_unique,
+    let query = supabase.from("hospital").select(
+      `id_unique,
          name,
          location,
          latitude,
          longitude
         `
-      )
-      .match({ location });
+    );
+
+    // 지역전체
+    if (params.id === "ALL" || location === -1) {
+      const { data, error, status, statusText } = await query;
+
+      if (error) {
+        return Response.json({ data: null }, { status, statusText });
+      }
+
+      const position = data?.map(({ latitude, longitude, name }) => {
+        return {
+          lat: latitude,
+          lng: longitude,
+          title: name,
+        };
+      });
+
+      return Response.json({ position }, { status, statusText });
+    }
+
+    const { data, error, status, statusText } = await query.match({ location });
 
     if (error) {
       return Response.json({ data: null }, { status, statusText });
