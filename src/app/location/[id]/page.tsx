@@ -18,7 +18,7 @@ const LocationDetailPage = ({}: LocationDetailPageProps) => {
   const { id }: { id: string } = useParams();
 
   const { data } = useQuery({
-    queryKey: ["position"],
+    queryKey: ["position", id],
     queryFn: () => getPositionAPI({ id }),
   });
 

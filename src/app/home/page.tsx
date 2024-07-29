@@ -14,7 +14,7 @@ import { Banner } from "@/components/organism/layout/banner";
 import { clsx } from "clsx";
 
 export default async function Home({
-  searchParams,
+  searchParams: { locationNum },
 }: {
   searchParams: { locationNum: string };
 }) {
@@ -25,8 +25,7 @@ export default async function Home({
       <div className={styles.location_wrapper}>
         {location.map((name, i) => {
           const selectChipStyle =
-            (searchParams.locationNum === undefined && i === 0) ||
-            +searchParams.locationNum === i;
+            (locationNum === undefined && i === 0) || +locationNum === i;
 
           return (
             <Link
@@ -41,7 +40,10 @@ export default async function Home({
             </Link>
           );
         })}
-        <Link href={ROUTE.LOCATION_DETAIL("") + "ALL"} scroll={true}>
+        <Link
+          href={ROUTE.LOCATION_DETAIL("") + location[+locationNum]}
+          scroll={true}
+        >
           <Chip>{"See All"}</Chip>
         </Link>
       </div>
@@ -69,7 +71,7 @@ export default async function Home({
           <p>Choose the region u want</p>
         </div>
         {renderLocalChip()}
-        <LocationHospital locationNum={searchParams?.locationNum} />
+        <LocationHospital locationNum={locationNum} />
       </section>
     </main>
   );

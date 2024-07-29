@@ -12,14 +12,9 @@ export async function GET(
   });
 
   try {
-    let query = supabase.from("hospital").select(
-      `id_unique,
-         name,
-         location,
-         latitude,
-         longitude
-        `
-    );
+    let query = supabase
+      .from("hospital")
+      .select(`id_unique,name,location,latitude,longitude`);
 
     // 지역전체
     if (params.id === "ALL" || location === -1) {

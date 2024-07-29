@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React from "react";
 
 import styles from "./hospital-detail..module.scss";
@@ -9,6 +8,8 @@ import Floating, { FloatItem } from "./components/floating";
 import { redirect } from "next/navigation";
 import PageHeader from "@/components/molecules/header/page-header";
 import { HospitalFavoriteIcon } from "@/components/atoms/favorite";
+
+import { HospitalThumbnail } from "./components/thumbnail";
 
 interface HospitalDetailPageProps {
   params: { id: string };
@@ -39,10 +40,7 @@ const HospitalDetailPage = async ({
         <HospitalFavoriteIcon isFavorite={!!data.favorite.length} />
       </PageHeader>
       <div className={styles.main}>
-        <div className={styles.thumbnail_box}>
-          <Image fill src={data.imageurls[0]} alt={data.name} />
-        </div>
-
+        <HospitalThumbnail imageurls={data.imageurls} />
         {/* tab */}
         <HospitalTab currentTab={searchParams.tab} id={params.id} />
 
