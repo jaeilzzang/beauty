@@ -21,7 +21,6 @@ const LocationDetailPage = ({}: LocationDetailPageProps) => {
     queryKey: ["position"],
     queryFn: () => getPositionAPI({ id }),
   });
-  console.log(id, data);
 
   if (!data) return <LoadingSpinner pageLoading />;
 
