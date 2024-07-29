@@ -11,6 +11,7 @@ import Beauty from "./components/beauty";
 
 import LocationHospital from "./components/location";
 import { Banner } from "@/components/organism/layout/banner";
+import { clsx } from "clsx";
 
 export default async function Home({
   searchParams,
@@ -22,12 +23,25 @@ export default async function Home({
   const renderLocalChip = () => {
     return (
       <div className={styles.location_wrapper}>
-        {location.map((name, i) => (
-          <Link key={name} href={`/home?locationNum=${i}`} scroll={false}>
-            <Chip>{name}</Chip>
-          </Link>
-        ))}
-        <Link href={ROUTE.LOCATION_DETAIL("") + "ALL"} scroll={false}>
+        {location.map((name, i) => {
+          const selectChipStyle =
+            (searchParams.locationNum === undefined && i === 0) ||
+            +searchParams.locationNum === i;
+
+          return (
+            <Link
+              className={clsx({
+                [styles.select_chip]: selectChipStyle,
+              })}
+              key={name}
+              href={`/home?locationNum=${i}`}
+              scroll={false}
+            >
+              <Chip>{name}</Chip>
+            </Link>
+          );
+        })}
+        <Link href={ROUTE.LOCATION_DETAIL("") + "ALL"} scroll={true}>
           <Chip>{"See All"}</Chip>
         </Link>
       </div>
