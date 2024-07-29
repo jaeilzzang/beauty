@@ -41,7 +41,7 @@ export default async function Home({
           );
         })}
         <Link
-          href={ROUTE.LOCATION_DETAIL("") + location[+locationNum]}
+          href={ROUTE.LOCATION_DETAIL("") + location[+locationNum || 0]}
           scroll={true}
         >
           <Chip>{"See All"}</Chip>
