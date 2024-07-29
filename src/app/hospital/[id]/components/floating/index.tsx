@@ -29,9 +29,10 @@ const Floating = ({ float }: FloatingProps) => {
   return (
     <div className={styles.floating}>
       {float.map(({ name, href }) => {
+        const tel = name === "tel" ? `tel:${href}` : href;
         return (
           // target="_blank" 새창열기
-          <a key={name} href={href} target="_blank" rel="noopener noreferrer">
+          <a key={name} href={tel} target="_blank" rel="noopener noreferrer">
             {icon[name]}
           </a>
         );
