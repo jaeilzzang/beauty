@@ -23,7 +23,7 @@ export const favoriteActions = async ({
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect(referer);
+    return;
   }
 
   const uuid = user.id;
