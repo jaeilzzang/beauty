@@ -38,7 +38,7 @@ export async function generateMetadata(
   };
 }
 
-export const HospitalDetailPage = async ({
+const HospitalDetailPage = async ({
   params,
   searchParams,
 }: HospitalDetailPageProps) => {
