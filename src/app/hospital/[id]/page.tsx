@@ -12,13 +12,33 @@ import { HospitalFavoriteIcon } from "@/components/atoms/favorite";
 import { HospitalThumbnail } from "./components/thumbnail";
 
 import ScrollTop from "@/components/atoms/scrollTop";
+import { Metadata, ResolvingMetadata } from "next";
+import { capitalizeWord } from "@/utils/word";
 
-interface HospitalDetailPageProps {
+type Props = {
   params: { id: string };
   searchParams: { tab: string };
+};
+
+interface HospitalDetailPageProps extends Props {}
+
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { data } = await getHospitalMainAPI({ id: params?.id });
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  return {
+    title: `${data.name} | ${capitalizeWord(searchParams.tab)}`,
+    openGraph: {
+      images: [...data.imageurls, ...previousImages],
+    },
+  };
 }
 
-const HospitalDetailPage = async ({
+export const HospitalDetailPage = async ({
   params,
   searchParams,
 }: HospitalDetailPageProps) => {

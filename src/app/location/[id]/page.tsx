@@ -1,56 +1,38 @@
-"use client";
-
-import { getLocationDetailAPI } from "../../api/location/[id]";
-
-import { useParams } from "next/navigation";
-import LoadingSpinner from "@/components/atoms/loading/spinner";
 import { LocationMap } from "../components/map";
-import { InfinityItemList } from "@/components/template/InfinityItem";
-import { HospitalCard } from "@/components/molecules/card";
-import { ROUTE } from "@/router";
 import { getPositionAPI } from "@/app/api/location/[id]/position";
-import { useQuery } from "@tanstack/react-query";
-import styles from "./location-detail.module.scss";
+import { Metadata, ResolvingMetadata } from "next";
+import { ItemList } from "./components/itemList";
+import { capitalizeWord } from "@/utils/word";
 
-interface LocationDetailPageProps {}
+export async function generateMetadata(
+  { params }: { params: { id: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const previousImages = (await parent).openGraph?.images || [];
 
-const LocationDetailPage = ({}: LocationDetailPageProps) => {
-  const { id }: { id: string } = useParams();
+  return {
+    title: `Location | ${capitalizeWord(params.id)}`,
+    openGraph: {
+      images: [...previousImages],
+    },
+  };
+}
 
-  const { data } = useQuery({
-    queryKey: ["position", id],
-    queryFn: () => getPositionAPI({ id }),
-  });
+interface LocationDetailPageProps {
+  params: {
+    id: string;
+  };
+}
 
-  if (!data) return <LoadingSpinner pageLoading />;
+const LocationDetailPage = async ({
+  params: { id },
+}: LocationDetailPageProps) => {
+  const data = await getPositionAPI({ id });
 
   return (
     <main>
       <LocationMap name={id.toUpperCase()} position={data.position} />
-
-      <InfinityItemList
-        className={styles.grid}
-        fetchFn={getLocationDetailAPI}
-        queryKey={"surgeries_reviews"}
-      >
-        {(item) => {
-          return (
-            <>
-              {item.data.map(({ id_unique, imageurls, name }) => {
-                return (
-                  <HospitalCard
-                    key={id_unique}
-                    src={imageurls[0]}
-                    alt={name}
-                    name={name}
-                    href={ROUTE.HOSPITAL_DETAIL("") + id_unique}
-                  />
-                );
-              })}
-            </>
-          );
-        }}
-      </InfinityItemList>
+      <ItemList />
     </main>
   );
 };

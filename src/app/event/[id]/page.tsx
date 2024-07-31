@@ -10,6 +10,27 @@ import { ROUTE } from "@/router";
 
 import { daysYMDFormat } from "@/utils/days";
 
+import { ResolvingMetadata, Metadata } from "next";
+
+export async function generateMetadata(
+  { params }: { params: { id: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { data } = await getEventDetailAPI({ id: params.id });
+
+  const previousImages = (await parent).openGraph?.images || [];
+
+  const event = data[0];
+
+  return {
+    title: `${event.id_hospital.name} | ${data[0].name}`,
+    description: event.description,
+    openGraph: {
+      images: [...data[0].imageurls, ...previousImages],
+    },
+  };
+}
+
 interface EventDetailPageProps {
   params: { id: string };
 }
