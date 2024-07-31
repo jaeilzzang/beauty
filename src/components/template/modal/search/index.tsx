@@ -44,13 +44,19 @@ export const SearchModal = ({
     onCancel();
   };
 
+  const handleCloseModal = () => {
+    setSearchList(itemList);
+    onCancel();
+  };
+
   return (
-    <ModalOverlay open={open} handleClick={onCancel}>
+    <ModalOverlay open={open} handleClick={handleCloseModal}>
       <input
         className={styles.search}
         placeholder="Search"
         name="search"
         onChange={handleOnChange}
+        autoFocus
       />
       <ul className={styles.ul}>
         {searchList.map((item, i) => (

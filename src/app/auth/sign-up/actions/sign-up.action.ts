@@ -2,7 +2,7 @@
 
 import { ROUTE } from "@/router";
 import { createClient } from "@/utils/supabase/server";
-import { AuthError, PostgrestError } from "@supabase/supabase-js";
+
 import { redirect } from "next/navigation";
 
 const signUpActions = async (
@@ -14,6 +14,13 @@ const signUpActions = async (
   const name = formData.get("name") as string;
   const nickname = formData.get("nickname") as string;
   const country_name = formData.get("nationality") as string;
+
+  if (!country_name) {
+    return {
+      ...prevState,
+      message: "not select country",
+    };
+  }
 
   const supabase = createClient();
 
@@ -42,13 +49,6 @@ const signUpActions = async (
     country_name,
   }).toString();
 
-  const errorhandler = (error: PostgrestError | AuthError) => {
-    return {
-      ...prevState,
-      message: error.code || error.message,
-    };
-  };
-
   const createUser = await supabase.auth.signUp({
     email,
     password,
@@ -62,21 +62,10 @@ const signUpActions = async (
   });
 
   if (createUser.error) {
-    return errorhandler(createUser.error);
-  }
-
-  console.log(createUser, "createUser");
-
-  const createUserProfile = await supabase.from("user").insert({
-    uuid: createUser.data.user?.id,
-    nickname,
-    name,
-    email,
-    id_country: getCountryCode.data[0].id,
-  });
-
-  if (createUserProfile.error) {
-    return errorhandler(createUserProfile.error);
+    return {
+      ...prevState,
+      message: createUser.error.code || createUser.error.message,
+    };
   }
 
   const url = `${ROUTE.EMAIL_VERIFICATION}?${params}`;

@@ -2,7 +2,9 @@
 
 import { country } from "@/constants/country";
 import { ROUTE } from "@/router";
+
 import { createClient } from "@/utils/supabase/server";
+import { AuthError, PostgrestError } from "@supabase/supabase-js";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -24,7 +26,6 @@ const verifyActions = async (prevState: any, formData: FormData) => {
     token: code,
     type: "email",
   });
-  console.log(verifyCode);
 
   if (verifyCode.error) {
     return {
@@ -32,8 +33,6 @@ const verifyActions = async (prevState: any, formData: FormData) => {
       message: verifyCode.error.code as string,
     };
   }
-
-  console.log(userInfo, "param"); // Log
 
   const countryCode = country.find(
     (e) => e.country_name === userInfo.country_name
@@ -46,20 +45,36 @@ const verifyActions = async (prevState: any, formData: FormData) => {
     if (requireKey.includes(key)) insertDb[key] = userInfo[key];
   }
 
-  // user 테이블 insert
-  const saveUserProfile = await supabase.from("user").insert({
-    ...insertDb,
-    id_country: countryCode,
-    uid: verifyCode.data.user?.id,
-  });
+  const getUser = await supabase
+    .from("user")
+    .select("user_no")
+    .limit(1)
+    .order("user_no", { ascending: false });
 
-  console.log(saveUserProfile);
-
-  if (saveUserProfile.error) {
-    return { ...prevState, message: saveUserProfile.error.code };
+  if (getUser.error) {
+    return {
+      ...prevState,
+      message: getUser.error.message || getUser.error.code,
+    };
   }
 
-  // redirect(ROUTE.HOME);
+  const uuid = verifyCode.data.user?.id;
+  const id_country = countryCode?.id;
+  const user_no = getUser.data[0]?.user_no + 1;
+
+  // user 테이블 insert
+  const saveUserProfile = await supabase
+    .from("user")
+    .insert([{ ...insertDb, id_country, uuid, user_no }]);
+
+  if (saveUserProfile.error) {
+    return {
+      ...prevState,
+      message: `verify failed\n${saveUserProfile.error.code}`,
+    };
+  }
+
+  redirect(ROUTE.HOME);
 };
 
 export default verifyActions;

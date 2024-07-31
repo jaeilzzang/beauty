@@ -1,7 +1,5 @@
 "use client";
 
-import styles from "./styles/signup.module.scss";
-
 import { useRouter } from "next/navigation";
 import { ROUTE } from "@/router";
 import Button from "@/components/atoms/button";
@@ -19,7 +17,14 @@ const SignUpButton = () => {
 
   return (
     <>
-      <Button variant="outline" color="blue" onClick={handleOpenModal}>
+      <Button
+        variant="outline"
+        color="blue"
+        onClick={(e) => {
+          e.preventDefault();
+          handleOpenModal();
+        }}
+      >
         SIGN UP
       </Button>
 

@@ -1,11 +1,12 @@
 "use client";
 
-import { HTMLAttributes, MouseEventHandler, PropsWithChildren } from "react";
+import { MouseEventHandler, PropsWithChildren } from "react";
 
 import styles from "./button.module.scss";
 import clsx from "clsx";
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   color?: "red" | "blue" | "white";
   variant?: "outline" | "contained";
 

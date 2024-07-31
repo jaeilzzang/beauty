@@ -40,4 +40,5 @@ export const ROUTE = {
   RECOMMEND: createNormalRouter("RECOMMEND"),
   RECOMMEND_DETAIL: createDetailRouter("RECOMMEND"),
   FAVORITE: createUserRouter("FAVORITE"),
+  UPDATE_PASSWORD: createNormalRouter("update-password"),
 };

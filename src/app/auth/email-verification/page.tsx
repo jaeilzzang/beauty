@@ -80,7 +80,7 @@ const EmailVerificationPage = () => {
       timeoutModal.setOpen(true);
     }
 
-    if (state.message) {
+    if (state?.message) {
       setMessage(state.message);
     }
   }, [state, timeOver]);
