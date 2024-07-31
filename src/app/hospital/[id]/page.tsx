@@ -11,6 +11,8 @@ import { HospitalFavoriteIcon } from "@/components/atoms/favorite";
 
 import { HospitalThumbnail } from "./components/thumbnail";
 
+import ScrollTop from "@/components/atoms/scrollTop";
+
 interface HospitalDetailPageProps {
   params: { id: string };
   searchParams: { tab: string };
@@ -36,11 +38,13 @@ const HospitalDetailPage = async ({
 
   return (
     <main>
+      <ScrollTop />
       <PageHeader name={data.name}>
         <HospitalFavoriteIcon isFavorite={!!data.favorite.length} />
       </PageHeader>
       <div className={styles.main}>
         <HospitalThumbnail imageurls={data.imageurls} />
+
         {/* tab */}
         <HospitalTab currentTab={searchParams.tab} id={params.id} />
 

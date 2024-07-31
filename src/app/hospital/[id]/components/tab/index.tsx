@@ -2,9 +2,7 @@ import { tabList } from "./constant";
 
 import TabComponent from "@/components/molecules/tab";
 
-import LoadingSpinner from "@/components/atoms/loading/spinner";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
 
 const InfoTab = dynamic(() => import("./info"));
 const EventTab = dynamic(() => import("./event"));
@@ -24,11 +22,7 @@ const HospitalTab = ({ currentTab, id }: HospitalTabProps) => {
 
   return (
     <TabComponent
-      component={
-        <Suspense fallback={<LoadingSpinner />}>
-          {Component[currentTab]}
-        </Suspense>
-      }
+      component={Component[currentTab]}
       currentTab={currentTab}
       list={tabList}
     />
