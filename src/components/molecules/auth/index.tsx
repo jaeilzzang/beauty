@@ -26,7 +26,9 @@ const Auth = async () => {
   return (
     <div className={styles.auth_header}>
       <Link href={href}>
-        <Button color="blue">{users ? text(users.user) : "LOGIN"}</Button>
+        <Button color="blue">
+          {users ? text(users.user) || users.user.email : "LOGIN"}
+        </Button>
       </Link>
       {isAdmin && <Link href={ROUTE.UPLOAD_HOSPITAL}>업로드 바로가기</Link>}
     </div>
