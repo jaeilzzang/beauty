@@ -11,6 +11,7 @@ const createRouter = (prefix: string) => (path: string) => {
 const createAuthRouter = createRouter("auth");
 const createUserRouter = createRouter("user");
 const createNormalRouter = createRouter("");
+const createAdminRouter = createRouter("admin");
 
 /**
  * nextjs 디테일 페이지 라우팅 방법은 경로/id 입니다.
@@ -41,4 +42,5 @@ export const ROUTE = {
   RECOMMEND_DETAIL: createDetailRouter("RECOMMEND"),
   FAVORITE: createUserRouter("FAVORITE"),
   UPDATE_PASSWORD: createNormalRouter("update-password"),
+  UPLOAD_HOSPITAL: createAdminRouter("upload"),
 };

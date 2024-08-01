@@ -21,11 +21,14 @@ const Auth = async () => {
     return isSnsUser ? user_metadata.name : user_metadata.nickname;
   };
 
+  const isAdmin = users?.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
   return (
     <div className={styles.auth_header}>
       <Link href={href}>
         <Button color="blue">{users ? text(users.user) : "LOGIN"}</Button>
       </Link>
+      {isAdmin && <Link href={ROUTE.UPLOAD_HOSPITAL}>업로드 바로가기</Link>}
     </div>
   );
 };
