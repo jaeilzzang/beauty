@@ -4,7 +4,7 @@ import { getSurgeriesReviewAPI } from "@/app/api/surgeries/[id]/review";
 import { ReviewCard } from "@/components/molecules/card";
 import { InfinityItemList } from "@/components/template/InfinityItem";
 
-export const RecommendReview = () => {
+const RecommendReview = () => {
   return (
     <InfinityItemList
       fetchFn={getSurgeriesReviewAPI}
@@ -27,3 +27,5 @@ export const RecommendReview = () => {
     </InfinityItemList>
   );
 };
+
+export default RecommendReview;

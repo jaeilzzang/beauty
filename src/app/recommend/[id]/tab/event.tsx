@@ -9,12 +9,12 @@ import { getSurgeriesEventAPI } from "@/app/api/surgeries/[id]/event";
 import { InfinityItemList } from "@/components/template/InfinityItem";
 import { daysYMDFormat } from "@/utils/days";
 
-export const RecommendEvent = () => {
+const RecommendEvent = () => {
   return (
     <InfinityItemList
       grid="2"
       fetchFn={getSurgeriesEventAPI}
-      queryKey={"surgeries_reviews"}
+      queryKey={"surgeries_event"}
     >
       {(item) =>
         item.data.map(
@@ -36,3 +36,5 @@ export const RecommendEvent = () => {
     </InfinityItemList>
   );
 };
+
+export default RecommendEvent;

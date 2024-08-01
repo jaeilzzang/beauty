@@ -1,16 +1,13 @@
-"use client";
-
 import TabComponent from "@/components/molecules/tab";
 
-import {
-  RecommendEvent,
-  RecommendHospital,
-  RecommendReview,
-  TTabKey,
-  tabList,
-} from "./";
+import { TTabKey, tabList } from "./";
 import { Suspense } from "react";
 import LoadingSpinner from "@/components/atoms/loading/spinner";
+import dynamic from "next/dynamic";
+
+const Event = dynamic(() => import("./event"));
+const Review = dynamic(() => import("./review"));
+const Hospital = dynamic(() => import("./hospital"));
 
 interface RecommendTabProps {
   currentTab: string;
@@ -18,9 +15,9 @@ interface RecommendTabProps {
 
 export const RecommendTab = ({ currentTab }: RecommendTabProps) => {
   const Component: Record<TTabKey & string, JSX.Element> = {
-    event: <RecommendEvent />,
-    reviews: <RecommendReview />,
-    hospitals: <RecommendHospital />,
+    event: <Event />,
+    reviews: <Review />,
+    hospitals: <Hospital />,
   };
 
   return (

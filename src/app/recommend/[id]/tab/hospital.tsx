@@ -7,7 +7,7 @@ import { ROUTE } from "@/router";
 
 import styles from "../recommend-detail.module.scss";
 
-export const RecommendHospital = () => {
+const RecommendHospital = () => {
   return (
     <InfinityItemList
       fetchFn={getSurgeriesHospitalAPI}
@@ -30,3 +30,5 @@ export const RecommendHospital = () => {
     </InfinityItemList>
   );
 };
+
+export default RecommendHospital;
