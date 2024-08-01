@@ -26,7 +26,7 @@ export async function generateMetadata(
   { params, searchParams }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { data } = await getHospitalMainAPI({ id: params?.id });
+  const data = await getHospitalMainAPI({ id: params?.id });
 
   const previousImages = (await parent).openGraph?.images || [];
 
@@ -44,7 +44,7 @@ const HospitalDetailPage = async ({
 }: HospitalDetailPageProps) => {
   if (params.id === "undefined") redirect("/");
 
-  const { data } = await getHospitalMainAPI({ id: params?.id });
+  const data = await getHospitalMainAPI({ id: params?.id });
 
   const getFloatList = Object.entries(data.hospital_details).reduce<
     FloatItem[]
@@ -60,7 +60,7 @@ const HospitalDetailPage = async ({
     <main>
       <ScrollTop />
       <PageHeader name={data.name}>
-        <HospitalFavoriteIcon isFavorite={!!data.favorite.length} />
+        <HospitalFavoriteIcon isFavorite={!!data.favorite} />
       </PageHeader>
       <div className={styles.main}>
         <HospitalThumbnail imageurls={data.imageurls} />

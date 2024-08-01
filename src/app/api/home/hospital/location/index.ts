@@ -9,10 +9,7 @@ export const getHospitalLocationAPI = async ({
 }: HospitalLocationInputDto) => {
   const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/home/hospital/location?locationNum=${locationNum}`;
 
-  const data = await fetchUtils<HospitalLocationOutputDto>({
-    url,
-    fetchOptions: { cache: "no-cache" },
-  });
+  const data = await fetchUtils<HospitalLocationOutputDto>({ url });
 
   return data ?? { data: [], total: 0 };
 };

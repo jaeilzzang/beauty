@@ -17,13 +17,9 @@ export interface HospitalDetails {
   kakaotalk: string;
 }
 
-export interface Hospital {
+export interface HospitalDetailMainOutput {
   imageurls: string[];
   name: string;
-  hospital_details: HospitalDetails;
+  hospital_details: HospitalDetails[];
   favorite: FavoriteItem[];
-}
-
-export interface HospitalDetailMainOutput {
-  data: Hospital;
 }

@@ -14,6 +14,7 @@ import { FavoriteIcon } from "@/components/icons/favoriteIcon";
 import Button from "@/components/atoms/button";
 
 import { favoriteActions } from "@/components/atoms/favorite/actions";
+import { SubmitButton } from "./components/button";
 
 const FavoritePage = () => {
   const [selectMode, setSelectMode] = useState<boolean>(false);
@@ -36,6 +37,15 @@ const FavoritePage = () => {
     });
   };
 
+  const handleSubmitFavorite = () => {
+    if (!selectItem.length) return;
+
+    favoriteActions({
+      isFavorite: selectMode && !!selectItem.length,
+      id_hospital: JSON.stringify(selectItem),
+    });
+  };
+
   const isFavorite = (id: string) => selectItem.includes(id);
   const href = (id: string) =>
     selectMode ? "#" : ROUTE.HOSPITAL_DETAIL("") + id;
@@ -45,21 +55,13 @@ const FavoritePage = () => {
       <PageHeader name="Favorite">
         <div className={styles.btn_wrapper}>
           {selectMode ? (
-            <form className={styles.remove_btn}>
-              <Button
-                color="blue"
-                formAction={() => {
-                  if (!selectItem.length) return;
-
-                  favoriteActions({
-                    isFavorite: selectMode && !!selectItem.length,
-                    id_hospital: JSON.stringify(selectItem),
-                  });
-                }}
-              >
-                Delete
-              </Button>
-              <Button color="blue" onClick={handleReset}>
+            <form
+              className={styles.remove_btn}
+              action={handleSubmitFavorite}
+              onReset={handleReset}
+            >
+              <SubmitButton>Delete</SubmitButton>
+              <Button type="reset" color="blue">
                 Cancel
               </Button>
             </form>
@@ -84,11 +86,13 @@ const FavoritePage = () => {
                 className={styles.card}
                 onClick={() => handleSelect(hospital.id_unique)}
               >
-                <div className={styles.favorite_icon}>
-                  <FavoriteIcon
-                    fill={isFavorite(hospital.id_unique) ? "red" : "white"}
-                  />
-                </div>
+                {selectMode ? (
+                  <div className={styles.favorite_icon}>
+                    <FavoriteIcon
+                      fill={isFavorite(hospital.id_unique) ? "red" : "white"}
+                    />
+                  </div>
+                ) : null}
                 <HospitalCard
                   alt={hospital.name}
                   name={hospital.name}

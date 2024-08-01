@@ -24,8 +24,6 @@ const resetPasswordActions = async (
     redirectTo: `${process.env.NEXT_PUBLIC_API_ROUTE}${ROUTE.UPDATE_PASSWORD}`,
   });
 
-  console.log(error);
-
   if (error) {
     return {
       ...prev,

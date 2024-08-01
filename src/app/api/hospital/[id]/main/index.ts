@@ -3,11 +3,18 @@ import {
   HospitalDetailMainInputDto,
   HospitalDetailMainOutput,
 } from "./main.dto";
+import { createClient } from "@/utils/supabase/server";
 
 export const getHospitalMainAPI = async ({
   id,
 }: HospitalDetailMainInputDto): Promise<HospitalDetailMainOutput> => {
-  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/hospital/${id}/main`;
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const url = `${process.env.NEXT_PUBLIC_API_ROUTE}/api/hospital/${id}/main?uuid=${user?.id}`;
 
   const data = await fetchUtils<HospitalDetailMainOutput>({
     url,
@@ -16,5 +23,5 @@ export const getHospitalMainAPI = async ({
     },
   });
 
-  return data ?? [];
+  return data;
 };

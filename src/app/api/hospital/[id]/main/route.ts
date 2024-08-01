@@ -8,14 +8,21 @@ export async function GET(
   const id_unique = params.id;
   const supabase = createClient();
 
+  const { searchParams } = new URL(req.url);
+  const uuid = searchParams.get("uuid") as string;
+
   try {
-    const { data, error, status, statusText } = await supabase
+    const {
+      data: hospitalData,
+      error,
+      status,
+      statusText,
+    } = await supabase
       .from("hospital")
       .select(
         `id_unique,
          imageurls,
-         name,
-         favorite: favorite ("*")
+         name
         `
       )
       .match({ id_unique });
@@ -41,15 +48,33 @@ export async function GET(
       return Response.json({ data: null }, { status, statusText });
     }
 
-    return Response.json(
-      {
-        data: {
-          ...data[0],
-          hospital_details: detailData[0],
-        },
-      },
-      { status: 200, statusText: "success" }
-    );
+    if (!uuid) {
+      const data = {
+        ...hospitalData[0],
+        favorite: null,
+        hospital_details: detailData,
+      };
+
+      return Response.json(data, { status: 200, statusText: "success" });
+    }
+
+    const { data: favoriteData, error: favoriteError } = await supabase
+      .from("favorite")
+      .select("*")
+      .eq("uuid", uuid)
+      .eq("id_hospital", id_unique);
+
+    if (favoriteError) {
+      return Response.json({ data: null }, { status, statusText });
+    }
+
+    const data = {
+      ...hospitalData[0],
+      favorite: favoriteData,
+      hospital_details: detailData,
+    };
+
+    return Response.json(data, { status: 200, statusText: "success" });
   } catch (error) {
     if (error instanceof Error) {
       return Response.json(
