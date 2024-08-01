@@ -57,6 +57,7 @@ export const SearchModal = ({
         name="search"
         onChange={handleOnChange}
         autoFocus
+        autoComplete={"off"}
       />
       <ul className={styles.ul}>
         {searchList.map((item, i) => (
