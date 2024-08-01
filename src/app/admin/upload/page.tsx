@@ -16,6 +16,7 @@ import LoadingSpinner from "@/components/atoms/loading/spinner";
 import { SubmitButton } from "./button";
 import useModal from "@/hooks/useModal";
 import { AlertModal } from "@/components/template/modal/alert";
+import { useRouter } from "next/navigation";
 
 interface Surgery {
   created_at: string;
@@ -30,6 +31,8 @@ interface Surgery {
 const imageUploadLength = 6;
 
 const UploadTestPage = () => {
+  const router = useRouter();
+
   const ref = useRef<HTMLInputElement>(null);
   const supabase = createClient();
 
@@ -55,6 +58,14 @@ const UploadTestPage = () => {
       handleOpenModal();
     }
   }, [state]);
+
+  const handleModal = () => {
+    if (state?.status === "success") {
+      router.refresh();
+    }
+
+    handleOpenModal();
+  };
 
   const [preview, setPreview] = useState<Array<string | undefined>>([]);
   const [file, setFile] = useState<Array<File>>([]);
@@ -133,7 +144,7 @@ const UploadTestPage = () => {
               <div className={styles.img_box} key={i}>
                 {preview[i] ? (
                   <div
-                    id={file[i].lastModified.toString()}
+                    id={file[i]?.lastModified.toString()}
                     className={styles.delete_btn}
                     onClick={(e) => {
                       handleDeletePreview(e, i);
@@ -177,8 +188,8 @@ const UploadTestPage = () => {
         </div>
       </form>
 
-      <AlertModal onCancel={handleOpenModal} open={open}>
-        {state?.message}
+      <AlertModal onCancel={handleModal} open={open}>
+        {Array.isArray(state?.message) ? state?.message[0] : state?.message}
       </AlertModal>
     </main>
   );

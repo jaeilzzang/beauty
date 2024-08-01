@@ -51,7 +51,7 @@ export async function GET(
     if (!uuid) {
       const data = {
         ...hospitalData[0],
-        favorite: null,
+        favorite: [],
         hospital_details: detailData,
       };
 

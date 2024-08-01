@@ -56,11 +56,13 @@ const HospitalDetailPage = async ({
     return acc;
   }, []);
 
+  const isFavorite = data?.favorite?.length > 0;
+
   return (
     <main>
       <ScrollTop />
       <PageHeader name={data.name}>
-        <HospitalFavoriteIcon isFavorite={!!data.favorite} />
+        <HospitalFavoriteIcon isFavorite={isFavorite} />
       </PageHeader>
       <div className={styles.main}>
         <HospitalThumbnail imageurls={data.imageurls} />
